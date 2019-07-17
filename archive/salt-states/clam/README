@@ -1,0 +1,11 @@
+### ClamAV
+
+## Description:
+>ClamAV® is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
+
+[Documentation](https://www.clamav.net/documents/installing-clamav)
+[Installation Guide](https://linux-audit.com/install-clamav-on-centos-7-using-freshclam/)
+
+## States
+- init.sls: installs clamav and dependencies
+- freshclam.sls: configures freshclam, an AV update service

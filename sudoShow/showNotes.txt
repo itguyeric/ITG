@@ -1,0 +1,71 @@
+SEASON 1
+=========
+
+EPISODE 1: A Plumbing Problem
+  Intro - This is the IT Guys podcast (BREAK)
+
+On this revamped inaugural episode, we identify the big problem in present day IT shops, a plumbing problem if you will. We will take a look at the particulars of this problem and how a growing movement called DevOps intends to fix this problem. (MUSIC FADES)
+Hey ya'll and welcome to the IT Guys podcast, my name is Eric Hendricks...
+
+  Body - 
+
+
+  Close - 
+  (FULL OUTRO)
+
+  Bonus - Like the amazing Marvel movies, we want to throw in a little tidbit, an extra nugget, or a tease after the outro music plays. On this episode, I wanted to take a moment to explain to upcoming episode arc.
+
+
+EPISODE 2: Putting the Dev in DevOps
+  Intro - 
+
+  Body - 
+    Always waiting on operations
+
+  Close - 
+
+  Bonus - 
+
+EPISODE 3: Not so Covert Ops
+  Intro - This is the IT Guys podcast (BREAK)
+  On today's episode, we look at the other side of the house, the ops or operations...?
+
+  Body - 
+
+Kumbiya (Spelling?)
+
+  Close - 
+
+  Bonus - Call for gear: (2 Identical servers, NAS, Rack, and portable laptop)
+
+
+EPISODE 4: DevSECOps? Come On!
+  Intro - 
+
+  Body - 
+
+  Close - 
+
+  Bonus - 
+
+STAND BY (BONUS) EPISODE : Eric Does IT (Eric's Origin Story)
+
+========
+Future
+========
+
+Seasons:
+  2 - The Tools
+    Version Control (GitHub, GitLab, etc)
+    Automated Build (Jenkins)
+    Automated Testing
+    Automated Deployment (Deployment platforms: VM, Docker, etc)
+    EXTRA: Review of Kansas City DevOpsDays
+
+
+  3 - ??? (Kanban, Context Switching, etc)
+
+Other Episodes:
+
+Bonus:
+  Outtakes

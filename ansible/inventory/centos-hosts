@@ -1,0 +1,22 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+
+[OSEv3:vars]
+deployment_type=origin
+openshift_release="3.10"
+openshift_enable_excluders=False
+openshift_disable_check=memory_availability,disk_availability
+openshift_master_default_subdomain=theitguys.us
+
+[masters]
+itg-prd-okd01.theitguys.us openshift_node_group_name='node-config-master-infra'
+
+[etcd]
+itg-prd-okd01.theitguys.us
+
+[nodes]
+itg-prd-okd01.theitguys.us openshift_node_group_name='node-config-compute'
+itg-prd-okd02.theitguys.us openshift_node_group_name='node-config-compute'
+itg-prd-okd03.theitguys.us openshift_node_group_name='node-config-compute'

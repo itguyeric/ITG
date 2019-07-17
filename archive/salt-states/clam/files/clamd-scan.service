@@ -1,0 +1,9 @@
+# Notice: This file is being managed by Salt!
+
+.include /lib/systemd/system/clamd.service
+
+[Unit]
+Description = Generic clamav scanner daemon
+
+[Install]
+WantedBy = multi-user.target

@@ -1,0 +1,9 @@
+### Lynis
+
+## Description:
+> Lynis is an open source security tool. It helps with auditing systems running UNIX-alike systems (Linux, macOS, BSD), and providing guidance for system hardening and compliance testing. This document contains the basics to use the software."
+
+[Getting Started](https://cisofy.com/documentation/lynis/#basics)
+
+## States
+- init.sls: configure the repository and install the package
