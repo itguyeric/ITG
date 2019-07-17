@@ -1,0 +1,107 @@
+# vim: set ft=dosini
+---
+version: "3.1"
+services:
+#                ghost:
+#                image: ghost:2-alpine
+#                container_name: ghost
+#                ports:
+#                        - 2368:2368
+#                volumes:
+#                        - /srv/ghost:/var/lib/ghost/content
+#                depends_on:
+#                        - ghost-db
+#                restart: unless-stopped
+#                environment:
+#                        database__client: mysql
+#                        database__connection__host: ghost-db
+#                        database__connection__user: root
+#                        database__connection__password: gh0stbl0gadm1n
+#                        database__connection__database: db_ghost
+
+#                ghost-db:
+#                image: linuxserver/mariadb
+#                container_name: ghost-db
+#                ports:
+#                        - 3307:3306
+#                volumes:
+#                        - /srv/ghost/db:/config
+#                restart: unless-stopped
+#                environment:
+#                        - PUID=1000
+#                        - PGID=1000
+#                        - TZ=America/Chicago
+#                        - MYSQL_ROOT_PASSWORD=gh0stbl0gadm1n
+
+        letsencrypt:
+                image: linuxserver/letsencrypt
+                container_name: le
+                cap_add:
+                        - NET_ADMIN
+                ports:
+                        - 443:443
+                        - 80:80
+                volumes:
+                        - /srv/letsencrypt:/config
+                restart: unless-stopped
+                depends_on:
+                        - nextcloud
+                        - unifi
+                environment:
+                        - PUID=1000
+                        - PGID=1000
+                        - TZ=America/Chicago
+                        - URL=theitguys.us
+                        - SUBDOMAINS=nextcloud,unifi
+                        - VALIDATION=http
+                        - DHLEVEL=4096
+                        - EMAIL=eric@theitguys.us
+
+        nextcloud:
+                image: linuxserver/nextcloud
+                container_name: nextcloud
+                depends_on:
+                        - nextcloud-db
+                volumes:
+                        - /srv/nextcloud/config:/config
+                        - /srv/nextcloud/data:/data
+                restart: unless-stopped
+                environment:
+                        - PUID=1000
+                        - PGID=1000
+                        - TZ=America/Chicago
+
+        nextcloud-db:
+                image: linuxserver/mariadb
+                container_name: nextcloud-db
+                volumes:
+                        - /srv/nextcloud/db:/config
+                restart: unless-stopped
+                environment:
+                        - PUID=1000
+                        - PGID=1000
+                        - TZ=America/Chicago
+                        - MYSQL_ROOT_PASSWORD=n3xtcl0udadm1n
+                        - MYSQL_DATABASE=db_nextcloud
+                        - MYSQL_USER=nextcloud
+                        - MYSQL_PASSWORD=n3xtcl0ud
+
+        unifi:
+                image: linuxserver/unifi-controller
+                container_name: unifi
+                ports:
+                        - 3478:3478/udp
+                        - 8080:8080
+                        - 8081:8081
+                        - 8443:8443
+                        - 8843:8843
+                        - 8880:8880
+                        - 6789:6789
+                        - 10001:10001/udp
+                volumes:
+                        - /srv/unifi:/config
+                restart: unless-stopped
+                environment:
+                        - PUID=1000
+                        - PGID=1000
+                        - TZ=America/Chicago
