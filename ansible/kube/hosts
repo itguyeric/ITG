@@ -1,6 +1,7 @@
 [masters]
-master		ansible_host=itg-prd-k8s01.theitguys.us		ansible_user=root
+itg-prd-kube01	ansible_host=10.0.0.17		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
 
 [workers]
-worker1		ansible_host=itg-prd-k8s02.theitguys.us		ansible_user=root
-worker2		ansible_host=itg-prd-k8s03.theitguys.us		ansible_user=root
+itg-prd-kube02	ansible_host=10.0.0.18		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
+itg-prd-kube03	ansible_host=10.0.0.19		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
+itg-prd-kube04	ansible_host=10.0.0.20		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
