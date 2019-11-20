@@ -3,3 +3,5 @@
 # Please adapt and uncomment the following lines:
 	name = Eric Hendricks
 	email = erichendricks@fastmail.com
+[push]
+	default = simple
