@@ -1,0 +1,9 @@
+# Docs: https://docs.ansible.com/ansible/latest/modules/group_module.html
+
+---
+
+- name: Ensure "ehendricks" exists
+  group:
+    name: ehendricks
+    gid: 2000
+    state: present
