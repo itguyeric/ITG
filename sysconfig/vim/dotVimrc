@@ -9,9 +9,6 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" Yaml Syntax for Salt SLS files
-Plugin 'saltstack/salt-vim'
-
 " Markdown Plugins
 Plugin 'plasticboy/vim-markdown'
 
