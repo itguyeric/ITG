@@ -28,10 +28,26 @@ services:
 #                        - /srv/ghost/db:/config
 #                restart: unless-stopped
 #                environment:
-#                        - PUID=1000
-#                        - PGID=1000
+#                        - PUID=1002
+#                        - PGID=1002
 #                        - TZ=America/Chicago
 #                        - MYSQL_ROOT_PASSWORD=gh0stbl0gadm1n
+
+        calibre:
+                image: linuxserver/calibre
+                container_name: calibre
+                ports:
+                        - 8082:8080
+                        - 8083:8081
+                volumes:
+                        - /srv/calibre:/config
+                restart: unless-stopped
+                environment:
+                        - PUID=1002
+                        - PGID=1002
+                        - TZ=America/Chicago
+                        - GUAC_USER=erictheitguy
+                        - GUAC_PASS=c36800a78f1a4d0ac514aedb2bb517f4
 
         letsencrypt:
                 image: linuxserver/letsencrypt
@@ -45,17 +61,18 @@ services:
                         - /srv/letsencrypt:/config
                 restart: unless-stopped
                 depends_on:
+                        - calibre
                         - nextcloud
-                        - unifi
+                        #- tt-rss
                 environment:
-                        - PUID=1000
-                        - PGID=1000
+                        - PUID=1002
+                        - PGID=1002
                         - TZ=America/Chicago
-                        - URL=theitguys.us
-                        - SUBDOMAINS=nextcloud,unifi
+                        - URL=theitguy.rocks
+                        - SUBDOMAINS=calibre,nextcloud
                         - VALIDATION=http
                         - DHLEVEL=4096
-                        - EMAIL=eric@theitguys.us
+                        - EMAIL=erichendricks@fastmail.com
 
         nextcloud:
                 image: linuxserver/nextcloud
@@ -67,8 +84,8 @@ services:
                         - /srv/nextcloud/data:/data
                 restart: unless-stopped
                 environment:
-                        - PUID=1000
-                        - PGID=1000
+                        - PUID=1002
+                        - PGID=1002
                         - TZ=America/Chicago
 
         nextcloud-db:
@@ -78,30 +95,61 @@ services:
                         - /srv/nextcloud/db:/config
                 restart: unless-stopped
                 environment:
-                        - PUID=1000
-                        - PGID=1000
+                        - PUID=1002
+                        - PGID=1002
                         - TZ=America/Chicago
                         - MYSQL_ROOT_PASSWORD=n3xtcl0udadm1n
                         - MYSQL_DATABASE=db_nextcloud
                         - MYSQL_USER=nextcloud
                         - MYSQL_PASSWORD=n3xtcl0ud
+#        tt-rss:
+#                image: linuxserver/tt-rss
+#                container_name: tt-rss
+#                depends_on:
+#                        - tt-rss-db
+#                volumes:
+#                        - /srv/tt-rss:/config
+#                restart: unless-stopped
+#                environment:
+#                        - PUID=1002
+#                        - PGID=1002
+#                        - TZ=America/Chicago
+#                ports:
+#                        - 7979:80
 
-        unifi:
-                image: linuxserver/unifi-controller
-                container_name: unifi
-                ports:
-                        - 3478:3478/udp
-                        - 8080:8080
-                        - 8081:8081
-                        - 8443:8443
-                        - 8843:8843
-                        - 8880:8880
-                        - 6789:6789
-                        - 10001:10001/udp
-                volumes:
-                        - /srv/unifi:/config
-                restart: unless-stopped
-                environment:
-                        - PUID=1000
-                        - PGID=1000
-                        - TZ=America/Chicago
+#        tt-rss-db:
+#                image: linuxserver/mariadb
+#                container_name: tt-rss-db
+#                volumes:
+#                        - /srv/tt-rss/db:/config
+#                restart: unless-stopped
+#                environment:
+#                        - PUID=1002
+#                        - PGID=1002
+#                        - TZ=America/Chicago
+#                        - MYSQL_ROOT_PASSORD=ttrssadm1n
+#                        - MYSQL_DATABASE=db_ttrss
+#                        - MYSQL_USER=ttrss
+#                        - MYSQL_PASSWORD=t2rs2pwd
+#                ports:
+#                        - 3308:3306
+
+#        unifi:
+#                image: linuxserver/unifi-controller:latest
+#                container_name: unifi
+#                ports:
+#                        - 3478:3478/udp
+#                        - 8080:8080
+#                        - 8081:8081
+#                        - 8443:8443
+#                        - 8843:8843
+#                        - 8880:8880
+#                        - 6789:6789
+#                        - 10021:10021/udp
+#                volumes:
+#                        - /srv/unifi:/config
+#                restart: unless-stopped
+#                environment:
+#                        - PUID=1002
+#                        - PGID=1002
+#                        - TZ=America/Chicago
