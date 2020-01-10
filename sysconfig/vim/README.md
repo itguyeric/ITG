@@ -9,7 +9,7 @@ Install Vundle Plugin Manager
 Install vim-yaml (Faster Yaml Highlighter)
      wget https://raw.githubusercontent.com/stephpy/vim-yaml/master/after/syntax/yaml.vim -C ~/.vim/yaml.vim
 Link the .vimrc file from git
-     ln -s ~/git/ehq/sysconfig/vim/dotVimrc ~/.vimrc
+     ln -s ~/git/itg/sysconfig/vim/dotVimrc ~/.vimrc
 
 Run the plugin installs
      vim
