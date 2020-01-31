@@ -10,10 +10,10 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Markdown Plugins
-Plugin 'plasticboy/vim-markdown'
+" Plugin 'plasticboy/vim-markdown'
 
 " vim-markdown customizations
-let g:vim_markdown_folding_disabled = 1
+" let g:vim_markdown_folding_disabled = 1
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
