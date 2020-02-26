@@ -1,0 +1,10 @@
+piVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: httpd-deployment
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: httpd-deployment

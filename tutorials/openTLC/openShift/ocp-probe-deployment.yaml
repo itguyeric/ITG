@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocp-probe
+spec:
+  selector:
+    matchLabels:
+      app: ocp-probe
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ocp-probe
+    spec:
+      containers:
+      - name: ocp-probe
+        image: quay.io/gpte-devops-automation/ocp-probe:v0.3
+        ports:
+        - containerPort: 8080
