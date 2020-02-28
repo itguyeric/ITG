@@ -1,3 +1,8 @@
+#backups
+
+#starbound
+/usr/bin/rsync -avzh /home/ehendricks/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/Starbound/ /home/ehendricks/Support/games/starbound/
+
 dirs=(
 	Desktop
 	Documents
