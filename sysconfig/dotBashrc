@@ -27,4 +27,5 @@ if [ -f '/usr/local/bin/google-cloud-sdk/completion.bash.inc' ]; then . '/usr/lo
 alias ls='ls --color=auto'
 alias ll='ls -lh --color=auto'
 #PS1='[\u@\h \W]\$ '
+export EDITOR='vim'
 source <(kubectl completion bash)
