@@ -1,0 +1,2 @@
+02 * * * * /home/ehendricks/git/itg/sysconfig/cron/gdriveSync.sh
+09 * * * * /usr/bin/flatpak update -y
