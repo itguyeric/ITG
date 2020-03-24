@@ -1,2 +1,8 @@
-02 * * * * /home/ehendricks/git/itg/sysconfig/cron/gdriveSync.sh
-09 * * * * /usr/bin/flatpak update -y
+# 2 Minutes past every hour, sync GoogleDrive
+2 * * * * /home/ehendricks/git/itg/sysconfig/cron/gdriveSync.sh
+
+# Every morning at 04:09, update flatpaks
+9 4 * * * /usr/bin/flatpak update -y
+
+# Every Saturday at 05:09, clean up old flatpaks
+9 5 * * 6 /usr/bin/flatpak uninstall --unused
