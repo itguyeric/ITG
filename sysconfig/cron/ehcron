@@ -5,4 +5,4 @@
 9 4 * * * /usr/bin/flatpak update -y
 
 # Every Saturday at 05:09, clean up old flatpaks
-9 5 * * 6 /usr/bin/flatpak uninstall --unused
+9 5 * * 6 /usr/bin/flatpak uninstall --unused -y
