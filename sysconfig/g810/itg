@@ -1,0 +1,6 @@
+# Eric's Custom Layout
+
+a 0000ff #set all keys blue
+fx breathing logo ff0000 10 #set breathing effect with red at speed 10
+
+c #commit
