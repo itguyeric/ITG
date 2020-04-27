@@ -3,3 +3,8 @@ ehq-prd-hat01
 
 [itg]
 itg-prd-blog01.itguyeric.com
+
+[build]
+itg-dev-plate
+rhel7
+rhel8
