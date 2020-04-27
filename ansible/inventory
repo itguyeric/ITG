@@ -5,6 +5,7 @@ ehq-prd-hat01
 itg-prd-blog01.itguyeric.com
 
 [build]
+fedora-plate
 itg-dev-plate
 rhel7
 rhel8
