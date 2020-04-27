@@ -1,7 +1,0 @@
-[masters]
-itg-prd-kube01	ansible_host=10.0.0.17		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
-
-[workers]
-itg-prd-kube02	ansible_host=10.0.0.18		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
-itg-prd-kube03	ansible_host=10.0.0.19		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans
-itg-prd-kube04	ansible_host=10.0.0.20		ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ans

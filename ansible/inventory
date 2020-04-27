@@ -1,8 +1,5 @@
-# End Devices
-localhost
+[workstations]
+ehq-prd-hat01
 
-# Servers
+[itg]
 itg-prd-blog01.itguyeric.com
-
-# Linux Academy
-
