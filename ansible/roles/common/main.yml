@@ -1,0 +1,6 @@
+---
+- hosts: all
+  #become: yes
+  tasks:
+    - name: install and configure vim
+      import_tasks: tasks/vim.yml
