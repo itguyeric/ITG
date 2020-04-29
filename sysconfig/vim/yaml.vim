@@ -55,7 +55,7 @@ hi link yamlKey		Identifier
 hi link yamlType	Type
 
 hi link yamlComment	Comment
-hi link yamlInline	Operator
-hi link yamlBlock	Operator
+hi link yamlInline	MYUSER
+hi link yamlBlock	MYUSER
 hi link yamlString	String
 hi link yamlEscape	Special
