@@ -1,4 +1,4 @@
-<mxfile modified="2020-10-10T15:49:26.470Z" host="app.diagrams.net" agent="5.0 (X11)" etag="5_RRLbLUu9GdtJDLQJ_E" version="13.7.9" type="gitlab">
+<mxfile modified="2020-10-10T15:50:22.648Z" host="app.diagrams.net" agent="5.0 (X11)" etag="2Io9zHR7P4LLPfu_viTn" version="13.7.9" type="gitlab">
   <diagram id="l2aKFoh6-Bn0gOPZ2l0T" name="Page-1">
     <mxGraphModel dx="569" dy="307" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -46,17 +46,20 @@
         <mxCell id="4ozJuK03ubyXHU0IQLVL-17" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rack.dell.dell_poweredge_1u;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
           <mxGeometry y="33.4" width="162" height="16.7" as="geometry" />
         </mxCell>
-        <mxCell id="4ozJuK03ubyXHU0IQLVL-14" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
+        <mxCell id="4ozJuK03ubyXHU0IQLVL-44" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
           <mxGeometry y="66.8" width="162" height="16.7" as="geometry" />
         </mxCell>
-        <mxCell id="4ozJuK03ubyXHU0IQLVL-13" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
+        <mxCell id="4ozJuK03ubyXHU0IQLVL-14" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
           <mxGeometry y="83.5" width="162" height="16.7" as="geometry" />
         </mxCell>
-        <mxCell id="4ozJuK03ubyXHU0IQLVL-11" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
+        <mxCell id="4ozJuK03ubyXHU0IQLVL-13" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
           <mxGeometry y="100.19999999999999" width="162" height="16.7" as="geometry" />
         </mxCell>
-        <mxCell id="4ozJuK03ubyXHU0IQLVL-12" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
+        <mxCell id="4ozJuK03ubyXHU0IQLVL-11" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
           <mxGeometry y="116.89999999999999" width="162" height="16.7" as="geometry" />
+        </mxCell>
+        <mxCell id="4ozJuK03ubyXHU0IQLVL-12" value="" style="strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;" vertex="1" parent="4ozJuK03ubyXHU0IQLVL-10">
+          <mxGeometry y="133.6" width="162" height="16.7" as="geometry" />
         </mxCell>
         <mxCell id="4ozJuK03ubyXHU0IQLVL-27" value="APC Battery Backup" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="518" y="250" width="112" height="10" as="geometry" />
