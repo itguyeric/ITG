@@ -1,0 +1,79 @@
+version: '3.6'
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+    #default:
+    #  driver: bridge
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    hostname: traefik
+    domainname: ${DOMAINNAME}
+    networks:
+      #- default
+      - traefik_proxy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/lib/containers/letsencrypt:/letsencrypt
+      - /var/lib/containers/traefik:/etc/traefik
+      - /var/lib/containers/shared:/shared
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - TZ=America/Chicago
+      - DO_AUTH_TOKEN=e880755d5ca30aade5863790e4f90338272ebaf6d308146b8b5d0d7c7e36191e
+    command:
+      #- "--api.insecure=true"
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
+        #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=contact@itguyeric.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=traefik"
+      - "traefik.frontend.rule=Host:traefik.${DOMAINNAME}"
+      - "traefik.port=8080"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.frontend.headers.STSSeconds=315360000"
+      - "traefik.frontend.headers.browserXSSFilter=true"
+      - "traefik.frontend.headers.contentTypeNosniff=true"
+      - "traefik.frontend.headers.forceSTSHeader=true"
+      - "traefik.frontend.headers.SSLHost=home.itguyeric.com"
+      - "traefik.frontend.headers.STSIncludeSubdomains=true"
+      - "traefik.frontend.headers.customFrameOptionsValue: allow-from htts:${DOMAINNAME}"
+      - "traefik.frontend.auth.basic.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
+      - "traefik.http.routers.dashboard.rule=Host(`home.itguyeric.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
+        
+#  radarr:
+#    image: "ghcr.io/linuxserver/radarr:latest"
+#    container_name: radarr
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.home.itguyeric.com`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
