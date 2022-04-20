@@ -1,9 +1,0 @@
----
-# install vim-enhanced
-- name: setup vim
-  package:
-    name: vim-enhanced
-    state: latest
-
-# TODO
-# install Vundle
