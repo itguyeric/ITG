@@ -1,5 +1,0 @@
-### MAC ###
-
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-alias ll='ls -la'
