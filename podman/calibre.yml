@@ -1,0 +1,54 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.2.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/calibre/books: Z
+    bind-mount-options:/var/lib/containers/calibre/config: Z
+    io.containers.autoupdate/calibre: registry
+    io.kubernetes.cri-o.ContainerType/calibre: container
+    io.kubernetes.cri-o.SandboxID/calibre: 94f9399ed60fb1e982520f4a5db7ae38bc01ca6e173c67de6865c9a746b9ac0
+    io.podman.annotations.autoremove/calibre: "TRUE"
+    io.podman.annotations.init/calibre: "TRUE"
+    io.podman.annotations.privileged/calibre: "FALSE"
+    io.podman.annotations.publish-all/calibre: "FALSE"
+  creationTimestamp: "2022-12-02T06:07:59Z"
+  labels:
+    app: calibre
+  name: calibre
+spec:
+  restartPolicy: Never
+  containers:
+  - env:
+    - name: TZ
+      value: America/Chicago
+    image: lscr.io/linuxserver/calibre:latest
+    name: calibre
+    ports:
+    - containerPort: 8080
+      hostPort: 8083
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /config
+      name: var-lib-containers-calibre-config-host-0
+    - mountPath: /books
+      name: var-lib-containers-calibre-books-host-1
+  hostname: calibre
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/calibre/config
+      type: Directory
+    name: var-lib-containers-calibre-config-host-0
+  - hostPath:
+      path: /var/lib/containers/calibre/books
+      type: Directory
+    name: var-lib-containers-calibre-books-host-1
+status: {}

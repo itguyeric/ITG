@@ -1,0 +1,55 @@
+---
+- hosts: workstations
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: install basic utilities
+      import_tasks: tasks/utilities.yml
+
+#    - name: add rpmfusion repos
+#      import_tasks: tasks/rpmfusion.yml
+
+#    - name: add flathub repository
+#      import_tasks: tasks/init_flathub.yml
+
+    - name: install gnome tools
+      import_tasks: tasks/init_gnome.yml
+
+#    - name: install kde tools
+#      import_tasks: tasks/init_kde.yml
+
+    - name: deploy bashrc
+      import_tasks: tasks/bashrc.yml
+
+#    - name: deploy ITG known hosts
+#      import_tasks: tasks/itgKnownHosts.yml
+
+#    - name: deploy ssh user config
+#      import_tasks: tasks/sshUserConfig.yml
+
+    - name: setup ansible client
+      import_tasks: tasks/ansibleClient.yml
+
+#    - name: install google-cloud-sdk
+#      import_tasks: tasks/gcloudSDK.yml
+
+    - name: download git repos
+      import_tasks: tasks/gitITG.yml
+
+    - name: install and configure tmux
+      import_tasks: tasks/tmux.yml
+
+    - name: install and configure g910 keyboard
+      import_tasks: tasks/g910.yml
+
+#    - name: install productivity software
+#      import_tasks: tasks/pkg_office.yml
+
+#    - name: install content creation tools
+#      import_tasks: tasks/pkg_content.yml
+
+#    - name: install social tools
+#      import_tasks: tasks/pkg_social.yml
+      
+#    - name: install games
+#      import_tasks: tasks/pkg_gaming.yml

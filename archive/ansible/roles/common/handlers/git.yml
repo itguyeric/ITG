@@ -1,0 +1,13 @@
+---
+- name: install git
+  package:
+    name: git-core
+    state: latest
+
+- name: deploy gitconfig
+  copy:
+    src: dotGitconfig
+    dest: "/home/{{ MYUSER }}/.gitconfig"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0664'

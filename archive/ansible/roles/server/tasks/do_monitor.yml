@@ -1,0 +1,17 @@
+---
+- name: add monitor repository
+  yum_repository:
+    name: sonar
+    baseurl: https://repos.insights.digitalocean.com/yum/do-agent/$basearch
+    description: sonar monitor repo for digital ocean
+    enabled: yes
+    file: digitalocean-agent
+    gpgcheck: 1
+    gpgkey: https://repos.insights.digitalocean.com/sonar-agent.asc
+
+- name: install monitor
+  package:
+    name: do-agent
+    state: latest
+
+# https://www.digitalocean.com/docs/monitoring/how-to/install-agent/#centos-and-fedora

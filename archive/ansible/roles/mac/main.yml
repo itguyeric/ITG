@@ -1,0 +1,8 @@
+---
+- hosts: mac
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: deploy bash_profile
+      import_tasks: tasks/bash.yml
+

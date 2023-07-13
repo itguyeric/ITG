@@ -1,0 +1,40 @@
+---
+- name: install communication flatpaks
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+  with_items:
+    - com.bluejeans.BlueJeans  # BlueJeans
+    - com.slack.Slack          # Slack
+
+- name: install communication packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - discord
+    - mumble
+
+# Inspired by https://carlchenet.com/automatically-send-toots-to-the-mastodon-social-network/
+- name: install toot CLI
+  pip:
+    name: toot
+    extra_args: --user
+    state: latest
+
+- name: create toot directory
+  file:
+    path: "/home/{{ MYUSER }}/.config/toot"
+    state: directory
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0775"
+
+- name: copy toot config
+  copy:
+    src: "toot_config.json"
+    dest: "/home/{{ MYUSER }}/.config/toot/config.json"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0644'

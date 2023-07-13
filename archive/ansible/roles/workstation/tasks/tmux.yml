@@ -1,0 +1,14 @@
+---
+- name: install tmux
+  become: yes
+  package:
+    name: tmux
+    state: latest
+
+- name: deploy tmux config
+  copy:
+    src: dotTmux.conf
+    dest: "/home/{{ MYUSER }}/.tmux.conf"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0664'

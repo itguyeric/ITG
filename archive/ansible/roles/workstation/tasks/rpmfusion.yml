@@ -1,0 +1,8 @@
+---
+- name: add rpmfusion repos
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - http://download1.rpmfusion.org/free/{{ ansible_distribution|lower }}/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+    - http://download1.rpmfusion.org/nonfree/{{ ansible_distribution|lower }}/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm

@@ -1,0 +1,35 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+
+    - name: register with rh access
+      import_tasks: tasks/init_redhat.yml
+     
+    - name: update packages
+      import_tasks: tasks/patch.yml
+      
+    - name: setup basic utilities
+      import_tasks: tasks/utilities.yml
+
+    - name: setup cockpit
+      import_tasks: tasks/cockpit.yml
+
+    - name: setup virtualization
+      import_tasks: tasks/virt.yml
+
+    - name: create users
+      import_tasks: tasks/users.yml
+
+    - name: deploy ssh_known_hosts
+      import_tasks: tasks/knownHosts.yml
+
+    - name: deploy ssh configs
+      import_tasks: tasks/sshConfig.yml
+
+    - name: setup and configure git
+      import_tasks: tasks/git.yml
+
+    - name: setup and configure vim
+      import_tasks: tasks/vim.yml

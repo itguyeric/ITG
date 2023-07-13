@@ -1,0 +1,5 @@
+Host *.opentlc.com
+  Hostname *.opentlc.com
+  Port 22
+  User ehendric-redhat.com
+  IdentityFile ~/.ssh/id_rsa_otlc

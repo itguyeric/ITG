@@ -1,0 +1,48 @@
+# docker pull secret
+# https://developers.redhat.com/blog/2021/02/18/how-to-work-around-dockers-new-download-rate-limit-on-red-hat-openshift/
+# https://docs.docker.com/docker-hub/access-tokens/
+
+oc create secret docker-registry docker \
+  --docker-server=docker.io \
+  --docker-username=<username> \
+  --docker-password=<password> \
+  --docker-email=<email>
+
+oc secrets link default docker --for=pull
+
+oc new-app <username>/<image> --source-secret=docker
+
+####################
+
+helm uninstall zfs-nfs -n democratic-csi
+
+oc delete ns democratic-csi
+
+oc create namespace democratic-csi
+
+oc label namespace democratic-csi security.openshift.io/scc.podSecurityLabelSync=false
+
+oc label --overwrite ns democratic-csi \
+ pod-security.kubernetes.io/enforce=privileged \
+ pod-security.kubernetes.io/warn=baseline \
+ pod-security.kubernetes.io/audit=baseline
+
+oc patch serviceaccount default -n democratic-csi --type "json" -p '[{"op":"add","path":"/imagePullSecrets","value":[{"name": "docker"}]}]'
+oc patch serviceaccount builder -n democratic-csi --type "json" -p '[{"op":"add","path":"/imagePullSecrets","value":[{"name": "docker"}]}]'
+oc patch serviceaccount deployer -n democratic-csi --type "json" -p '[{"op":"add","path":"/imagePullSecrets","value":[{"name": "docker"}]}]'
+
+oc get sa -n democratic-csi
+# repeat for all accounts
+
+helm upgrade \
+--install \
+--namespace democratic-csi \
+--values freenas-nfs.yaml \
+--set node.rbac.openshift.privileged=true \
+--set node.driver.localtimeHostPath=false \
+--set node.driver.imagePullPolicy=IfNotPresent \
+--set controller.driver.imagePullPolicy=IfNotPresent \
+--set controller.rbac.openshift.privileged=true \
+zfs-nfs democratic-csi/democratic-csi
+
+oc describe namespace democratic-csi

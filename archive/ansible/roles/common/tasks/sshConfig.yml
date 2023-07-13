@@ -1,0 +1,59 @@
+---
+- name: disable password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^#PasswordAuthentication'
+    line: "PasswordAuthentication no"
+    state: present
+    backup: yes
+
+- name: disable root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin'
+    line: "PasswordAuthentication no"
+    state: present
+    backup: yes
+# TODO: fix notify restart
+#  notify:
+#    - restart ssh
+
+- name: create .ssh directory
+  file:
+    path: "/home/{{ MYUSER }}/.ssh/include"
+    state: directory
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0700"
+
+- name: deploy users ssh master config
+  copy:
+    src: sshConfig
+    dest: "/home/{{ MYUSER }}/.ssh/config"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0640"
+
+- name: deploy github ssh config
+  copy:
+    src: sshConfigGithub
+    dest: "/home/{{ MYUSER }}/.ssh/include/github.conf"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0640"
+
+- name: add gitlab key
+  copy:
+    src: id_rsa_glab
+    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_glab"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600"
+
+- name: deploy gitlab ssh config
+  copy:
+    src: sshConfigGitLab
+    dest: "/home/{{ MYUSER }}/.ssh/include/gitlab.conf"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600"

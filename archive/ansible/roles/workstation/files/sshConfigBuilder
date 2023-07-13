@@ -1,0 +1,4 @@
+Host rhel7 rhel7-snap rhel8 rhel8-snap rhel8-cloud
+  Port 22
+  User ehendricks
+  IdentityFile ~/.ssh/id_rsa_do

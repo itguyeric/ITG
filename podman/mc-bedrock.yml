@@ -1,0 +1,52 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.2.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/bedrock: Z
+    io.containers.autoupdate/bedrock: registry
+    io.kubernetes.cri-o.ContainerType/bedrock: container
+    io.kubernetes.cri-o.SandboxID/bedrock: 1d6ca01004ff1db1aae3df94f427406b084c8e641aed4ffad8946f9cbcb04ab
+    io.kubernetes.cri-o.TTY/bedrock: "true"
+    io.podman.annotations.autoremove/bedrock: "FALSE"
+    io.podman.annotations.init/bedrock: "FALSE"
+    io.podman.annotations.privileged/bedrock: "FALSE"
+    io.podman.annotations.publish-all/bedrock: "FALSE"
+  creationTimestamp: "2023-03-07T17:54:48Z"
+  labels:
+    app: mc-bedrock
+  name: mc-bedrock
+spec:
+  restartPolicy: Never
+  containers:
+  - env:
+    - name: EULA
+      value: "TRUE"
+    image: docker.io/itzg/minecraft-bedrock-server:latest
+    name: bedrock
+    ports:
+    - containerPort: 19132
+      hostPort: 19132
+      protocol: UDP
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_AUDIT_WRITE
+    stdin: true
+    tty: true
+    volumeMounts:
+    - mountPath: /data
+      name: var-lib-containers-bedrock-host-0
+  hostname: mc-bedrock
+  
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/bedrock
+      type: Directory
+    name: var-lib-containers-bedrock-host-0
+status: {}

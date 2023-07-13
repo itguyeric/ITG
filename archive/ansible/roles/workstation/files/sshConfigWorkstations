@@ -1,0 +1,5 @@
+Host friday
+  Hostname friday
+  Port 22
+  User ehendricks
+  IdentityFile ~/.ssh/id_rsa_eh

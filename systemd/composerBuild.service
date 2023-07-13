@@ -1,0 +1,10 @@
+[Unit]
+Description=Rebuilds a vanilla RHEL template through image builder
+Wants=composerBuild.timer
+
+[Service]
+Type=oneshot
+ExecStart=/bin/composer-cli compose start rhel-base qcow2
+
+[Install]
+WantedBy=multi-user.target

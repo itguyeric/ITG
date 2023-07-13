@@ -1,0 +1,61 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.2.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/starbound: Z
+    io.containers.autoupdate/starbound-server: registry
+    io.kubernetes.cri-o.ContainerType/starbound-server: container
+    io.kubernetes.cri-o.SandboxID/starbound-server: 0974a8fb1a3ebfa77324867e014d5e3baff1bb56ffd74bbecefb652063a8b5f
+    io.kubernetes.cri-o.TTY/starbound-server: "false"
+    io.podman.annotations.autoremove/starbound-server: "FALSE"
+    io.podman.annotations.init/starbound-server: "FALSE"
+    io.podman.annotations.privileged/starbound-server: "FALSE"
+    io.podman.annotations.publish-all/starbound-server: "FALSE"
+  creationTimestamp: "2023-04-30T04:14:23Z"
+  labels:
+    app: starbound
+  name: starbound
+spec:
+  restartPolicy: Never
+  containers:
+  - args:
+    - bash
+    - /app/start.sh
+    env:
+    - name: STEAM_USERNAME
+      value: erich1527
+    - name: STEAM_PASSWORD
+      value: Prolonged-Decimeter4-Bountiful 
+    image: docker.io/didstopia/starbound-server:latest
+    name: starbound-server
+    ports:
+    - containerPort: 21025
+      hostPort: 21025
+    - containerPort: 21026
+      hostPort: 21026
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /steamcmd/starbound
+      name: var-lib-containers-starbound-host-0
+    - mountPath: /app.steam
+      name: b08544d6ac771d466b1969d6569f07083808c81fd914684bbcf5f1cd24081dd1-pvc
+  hostname: starbound
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/starbound
+      type: Directory
+    name: var-lib-containers-starbound-host-0
+  - name: b08544d6ac771d466b1969d6569f07083808c81fd914684bbcf5f1cd24081dd1-pvc
+    persistentVolumeClaim:
+      claimName: b08544d6ac771d466b1969d6569f07083808c81fd914684bbcf5f1cd24081dd1
+status: {}

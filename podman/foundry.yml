@@ -1,0 +1,66 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.2.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/foundry: Z
+    io.containers.autoupdate/vtt: registry
+    io.kubernetes.cri-o.ContainerType/vtt: container
+    io.kubernetes.cri-o.SandboxID/vtt: 7b63b0d81a71b4788f119beb01b404dd5ff01a745e1a69938a57f13e4999eea
+    io.kubernetes.cri-o.TTY/vtt: "true"
+    io.podman.annotations.autoremove/vtt: "FALSE"
+    io.podman.annotations.init/vtt: "FALSE"
+    io.podman.annotations.privileged/vtt: "FALSE"
+    io.podman.annotations.publish-all/vtt: "FALSE"
+  creationTimestamp: "2023-03-10T00:29:22Z"
+  labels:
+    app: foundry
+  name: foundry
+spec:
+  restartPolicy: Never
+  containers:
+  - args:
+    - resources/app/main.mjs
+    - --port=30000
+    - --headless
+    - --noupdate
+    - --dataPath=/data
+    env:
+    - name: FOUNDRY_LICENSE_KEY
+      value: ILQC-DZ6B-M6RO-XNUA-MSFP-IYYQ
+    - name: FOUNDRY_USERNAME
+      value: itguyeric
+    - name: FOUNDRY_ADMIN_KEY
+      value: Manmade8-Foothill-Safehouse-Grill
+    - name: FOUNDRY_PASSWORD
+      value: Manmade8-Foothill-Safehouse-Grill
+    - name: CONTAINER_PRESERVE_CONFIG
+      value: "true"
+    image: docker.io/felddy/foundryvtt:latest
+    name: vtt
+    ports:
+    - containerPort: 30000
+      hostPort: 30000
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    stdin: true
+    tty: true
+    volumeMounts:
+    - mountPath: /data
+      name: var-lib-containers-foundry-host-0
+  hostname: foundry
+  
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/foundry
+      type: Directory
+    name: var-lib-containers-foundry-host-0
+status: {}

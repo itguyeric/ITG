@@ -1,0 +1,29 @@
+{
+ "apps": {
+  "mastodon.social": {
+   "instance": "mastodon.social",
+   "base_url": "https://mastodon.social",
+   "client_id": "Ikt5MRI25bFSuLTqExpndU1Xze23blbcJTivUfANMBc",
+   "client_secret": "khmm-awPpjkDvvf00uQh4oj6c93mp9kg4dXPwJt93cs"
+  },
+  "linuxrocks.online": {
+   "instance": "linuxrocks.online",
+   "base_url": "https://linuxrocks.online",
+   "client_id": "eOMkO-tOLdEKZ_V4nNMqPyYiJI19Y6ce_Zrp88Pr5Xk",
+   "client_secret": "zWUCHmiaIjrvFqaDgD-d9P7Ye3Ck56aOhoFZA_S3R1A"
+  }
+ },
+ "users": {
+  "itguyeric@mastodon.social": {
+   "instance": "mastodon.social",
+   "username": "itguyeric",
+   "access_token": "qAMIdFUYG3H69kdosf6SMhjzpDceCUX5hg08FEiG2io"
+  },
+  "sudoshow@linuxrocks.online": {
+   "instance": "linuxrocks.online",
+   "username": "sudoshow",
+   "access_token": "Kfv2wjwXLzfeAAhrqFMMnrLckmcDHapnSFj8vPR5IlU"
+  }
+ },
+ "active_user": "sudoshow@linuxrocks.online"
+}

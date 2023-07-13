@@ -1,0 +1,58 @@
+name = "rhel-base"
+description = "Vanilla RHEL 9.x"
+version = "0.0.12"
+modules = []
+groups = []
+distro = ""
+
+[[packages]]
+name = "ansible-core"
+version = "*"
+
+[[packages]]
+name = "cockpit"
+version = "*"
+
+[[packages]]
+name = "cockpit-storaged"
+version = "*"
+
+[[packages]]
+name = "glibc-langpack-en.x86_64"
+version = "*"
+
+[[packages]]
+name = "rhel-system-roles"
+version = "*"
+
+[[packages]]
+name = "tmux"
+version = "*"
+
+[[packages]]
+name = "vim-enhanced"
+version = "*"
+
+[customizations]
+hostname = "rhel-base"
+
+[customizations.locale]
+languages = ["en_US.UTF-8"]
+keyboard = "us"
+
+[[customizations.filesystem]]
+mountpoint = "/var/log"
+size = "4 GiB"
+
+[customizations.services]
+enabled = ["cockpit"]
+
+[[customizations.user]]
+name = "ansible"
+description = "Ansible Service Account"
+password = "$6$NJdOhQDs.OcJ3WoX$99dr78VIju2wPjw0bhQfhdce.nWe5eLH9T9v9j5fs1zxMXon2UBvXEO4M3cXbNmZR3LSIZvHeTpduO4m0GB2J/"
+key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDtXJ2TkDgLM0R9P4+DlNmzqBaKukgepKQpgziVdIdu0PhWQ04V/ZIDSLHng9OZgwfPNlO4JsYtsIQUTwV/B6BZ0lri4Fpjw12+Fl9CcOUXlozyraNV1xDbTr5uQYC3GLrH4OjctZBlvcDdYSnACfLzh8/ekSKAO4+WlowPxmDtQU2DMeCpRk7RRPu/fA9LZBWknrRyK4lRUkLypwVMSpT70aJDUyYNBawaqSUJTVosja9+GQA1tlndbFyJOVj5fmHS4h8wsUbnLE27/maeOgSoAjIZd5/o00FTPPN9sSuDOPdqgLU8tWbD6bX6kXKe7YPUHRYmsMIb0cA39NFZRy20G472pp5shtO1Vff1Jl4p83db/fEB9S/caoCnDvV2gOFQIDzFUHvW141aOO6Ey3ynXXau8DQH+FEwWmUPx4oZtUgRyrRu1+qbUWoQKHxlIZyT0weNafZXfYxvLJpTjqY53eH+E+EDOoRmuQtd6ZpwNjhhextgztfybHSucRwagaIXE0TpO/ZwfyQ++9lq1CbZl31gSLCcEoQMVtRjaYX56NVvWmpVqnYhiAnCbabbV7EuQs1DsO9YuPA12z/XuwI/dffqjVJHnGrvxvB1h/Bvx+etF8jHnNE1LJM0TB13XRCrtTEIj5y61IZWFPke95XGYYU18Iq1xCJ+YEtv1gGt3w== ehendricks@ehq-prd-hat01"
+uid = 1000
+groups = ["wheel"]
+shell = "/usr/bin/bash"
+

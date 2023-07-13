@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer to rebuild vanilla RHEL template using image builder
+Requires=composerBuild.service
+
+[Timer]
+Unit=composerBuild.service
+OnCalendar=Sun
+
+[Install]
+WantedBy=timers.target

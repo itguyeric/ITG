@@ -1,0 +1,25 @@
+---
+#- name: configure gnome flatpak repo
+#  flatpak_remote:
+#    name: gnome
+#    state: present
+#    flatpakrepo_url: https://sdk.gnome.org/gnome-apps.flatpakrepo
+#    method: system
+
+#- name: install gnome flatpaks
+#  flatpak:
+#    name: "{{ item }}"
+#    state: latest
+#    remote: gnome
+## TODO: Move to vars file
+#  with_items:
+#    - 
+
+- name: install gnome standard packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - gnome-tweaks
+
+## TODO: Uninstall gnome-boxes

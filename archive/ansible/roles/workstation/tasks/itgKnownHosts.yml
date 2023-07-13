@@ -1,0 +1,7 @@
+---
+- name: add blog as known host
+  known_hosts:
+    state: present
+    path: /etc/ssh/ssh_known_hosts
+    name: itg-prd-blog02.itguyeric.com
+    key: itg-prd-blog02.itguyeric.com,159.203.90.89 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNMLHvMy7xSPD+oMHMK1u+hpgUlHiFrg4hzBejIQ+QX5CT5qJfHk5dh7UEi8mTKLDpPoZ8QHhIXMka9r94h88+g=

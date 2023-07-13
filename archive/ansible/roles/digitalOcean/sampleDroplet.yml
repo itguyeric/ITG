@@ -1,0 +1,38 @@
+---
+# Adapted from https://nickolasfisher.com/blog/How-To-Create-a-Digital-Ocean-Droplet-and-Provision-It-Using-Ansible
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+# TODO: Add DO_API_TOKEN to encrypted var
+  tasks:
+    - name: create sample droplet
+      digital_ocean_droplet:
+        unique_name: yes
+        region: nyc3
+        image: centos-8-x64
+        wait: yes
+        name: "itg-dev-tmp"
+        size: s-1vcpu-1gb
+        monitoring: yes
+        state: present
+        ssh_keys: '08:19:ef:4d:b9:3a:9c:a4:75:fb:23:da:ab:ef:29:10' # id_rsa_do
+        tags: dev
+      register: created_droplet
+
+#    - name: add droplet to domain
+#      digital_ocean_domain:
+#        state: present
+#        name: "{{ created_droplet.data.droplet.name }}.itguyeric.com"
+#        ip: "{{ created_droplet.data.ip_address }}"
+
+    - name: add hosts
+      add_host:
+        name: "{{ created_droplet.data.droplet.name }}"
+        groups: 
+          - digitalOcean
+          - servers
+
+    - import_role:
+        name: server

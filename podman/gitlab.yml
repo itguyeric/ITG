@@ -1,0 +1,60 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.4.1
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/gitlab/config/gitlab-app-gitlab: Z
+    bind-mount-options:/var/lib/containers/gitlab/data/gitlab-app-gitlab: Z
+    bind-mount-options:/var/lib/containers/gitlab/logs/gitlab-app-gitlab: Z
+    io.kubernetes.cri-o.TTY/gitlab/gitlab-app-gitlab: "false"
+    io.podman.annotations.autoremove/gitlab/gitlab-app-gitlab: "TRUE"
+    io.podman.annotations.cid-file/gitlab/gitlab-app-gitlab: /run/container-gitlab.service.ctr-id
+    io.podman.annotations.init/gitlab/gitlab-app-gitlab: "FALSE"
+    io.podman.annotations.privileged/gitlab/gitlab-app-gitlab: "FALSE"
+    io.podman.annotations.publish-all/gitlab/gitlab-app-gitlab: "FALSE"
+  creationTimestamp: "2023-06-13T20:12:49Z"
+  labels:
+    app: gitlab
+  name: gitlab
+spec:
+  restartPolicy: Never
+  containers:
+  - env:
+    - name: HOSTNAME
+      value: gitlab.itguyeric.com
+    image: docker.io/gitlab/gitlab-ce:latest
+    name: gitlab-app-gitlab
+    ports:
+    - containerPort: 22
+      hostPort: 2222
+    - containerPort: 80
+      hostPort: 8005
+    resources:
+      limits:
+        memory: 5124Mi
+    volumeMounts:
+    - mountPath: /etc/gitlab
+      name: var-lib-containers-gitlab-config-host-0
+    - mountPath: /var/log/gitlab
+      name: var-lib-containers-gitlab-logs-host-1
+    - mountPath: /var/opt/gitlab
+      name: var-lib-containers-gitlab-data-host-2
+  hostname: gitlab.itguyeric.com
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/gitlab/config
+      type: Directory
+    name: var-lib-containers-gitlab-config-host-0
+  - hostPath:
+      path: /var/lib/containers/gitlab/logs
+      type: Directory
+    name: var-lib-containers-gitlab-logs-host-1
+  - hostPath:
+      path: /var/lib/containers/gitlab/data
+      type: Directory
+    name: var-lib-containers-gitlab-data-host-2
+status: {}
+

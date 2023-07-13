@@ -1,0 +1,33 @@
+---
+#- name: deploy builder ssh config
+#  copy:
+#    src: sshConfigBuilder
+#    dest: "/home/{{ MYUSER }}/.ssh/include/builder.conf"
+#    owner: "{{ MYUSER }}"
+#    group: "{{ MYUSER }}"
+#    mode: "0644"    
+
+# TODO: Add variables to avoid duplicates
+- name: deploy workstation ssh config
+  copy:
+    src: sshConfigWorkstation
+    dest: "/home/{{ MYUSER }}/.ssh/include/friday.conf"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0644" 
+
+- name: deploy user key
+  copy:
+    src: id_rsa_eh
+    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_eh"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600"
+
+#- name: deploy builder key
+#  copy:
+#    src: id_rsa_do
+#    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_do"
+#    owner: "{{ MYUSER }}"
+#    group: "{{ MYUSER }}"
+#    mode: "0600"

@@ -1,0 +1,21 @@
+---
+- name: install ansible
+  package: 
+    name: ansible
+    state: latest
+
+- name: copy ansible key to ansible
+  copy:
+    src: id_rsa_ans
+    dest: "/home/ansible/.ssh/id_rsa_ans"
+    owner: ansible
+    group: ansible
+    mode: "0644"
+
+- name: copy ansible key to user
+  copy:
+    src: id_rsa_ans
+    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_ans"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600"

@@ -1,0 +1,9 @@
+---
+- name: install baseline utilities
+  package:
+    name: "{{ item }}"
+    state: latest
+# TODO: Move list to vars file
+  with_items:
+    #- cockpit-dashboard
+    - origin-clients

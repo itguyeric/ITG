@@ -1,0 +1,9 @@
+---
+- name: install kde flatpaks
+  flatpak:
+    name: "{{ item }}"
+    state: latest
+    remote: flathub
+# TODO: Move to vars file
+  with_items:
+    - 

@@ -1,0 +1,75 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.2.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options:/var/lib/containers/valheim/config: Z
+    bind-mount-options:/var/lib/containers/valheim/config/valheim-valheim-app: Z
+    bind-mount-options:/var/lib/containers/valheim/data: Z
+    bind-mount-options:/var/lib/containers/valheim/data/valheim-valheim-app: Z
+    io.containers.autoupdate/valheim-app/valheim-valheim-app: registry
+    io.containers.autoupdate/valheim-valheim-app: registry
+    io.kubernetes.cri-o.ContainerType/valheim-app/valheim-valheim-app: container
+    io.kubernetes.cri-o.ContainerType/valheim-valheim-app: container
+    io.kubernetes.cri-o.SandboxID/valheim-app/valheim-valheim-app: 23d93f2b03e78ce00703bdb5957f68aa2126506464d9d9c1c6f51bc6a30bdda
+    io.kubernetes.cri-o.SandboxID/valheim-valheim-app: d861c06332575a16693c877a0d1ee8543d2e603c9e57037173baa1c2034f28b
+    io.kubernetes.cri-o.TTY/valheim-app/valheim-valheim-app: "false"
+    io.podman.annotations.autoremove/valheim-app/valheim-valheim-app: "FALSE"
+    io.podman.annotations.autoremove/valheim-valheim-app: "FALSE"
+    io.podman.annotations.init/valheim-app/valheim-valheim-app: "FALSE"
+    io.podman.annotations.init/valheim-valheim-app: "FALSE"
+    io.podman.annotations.privileged/valheim-app/valheim-valheim-app: "FALSE"
+    io.podman.annotations.privileged/valheim-valheim-app: "FALSE"
+    io.podman.annotations.publish-all/valheim-app/valheim-valheim-app: "FALSE"
+    io.podman.annotations.publish-all/valheim-valheim-app: "FALSE"
+  creationTimestamp: "2023-03-07T17:54:30Z"
+  labels:
+    app: valheim
+  name: valheim
+spec:
+  restartPolicy: Never
+  containers:
+  - env:
+    - name: WORLD_NAME
+      value: ITGuy
+    - name: SERVER_PASS
+      value: Unrelated-Trifle4-Arrange
+    - name: SERVER_NAME
+      value: ITGuy World
+    image: docker.io/lloesche/valheim-server:latest
+    name: valheim-valheim-app
+    ports:
+    - containerPort: 2456
+      hostPort: 2456
+      protocol: UDP
+    - containerPort: 2457
+      hostPort: 2457
+      protocol: UDP
+    resources: {}
+    securityContext:
+      capabilities:
+        add:
+        - CAP_SYS_NICE
+        drop:
+        - CAP_MKNOD
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /opt/valheim
+      name: var-lib-containers-valheim-data-host-0
+    - mountPath: /config
+      name: var-lib-containers-valheim-config-host-1
+  hostname: valheim
+  
+  volumes:
+  - hostPath:
+      path: /var/lib/containers/valheim/data
+      type: Directory
+    name: var-lib-containers-valheim-data-host-0
+  - hostPath:
+      path: /var/lib/containers/valheim/config
+      type: Directory
+    name: var-lib-containers-valheim-config-host-1
+status: {}

@@ -1,0 +1,37 @@
+---
+- hosts: digitalOcean
+  gather_facts: no
+
+  tasks:
+#  - name: wait for port 22 to become available
+#    wait_for:
+#      host: "{{ inventory_hostname }}"
+#      port: 22
+#    delegate_to: localhost
+
+  - name: set login to root
+    set_fact:
+      ansible_ssh_user: root
+
+  - name: create ansible user
+    user:
+      append: yes
+      name: ansible
+      password: "{{ ANS_PASS }}"
+      comment: Ansible SVC
+      group: "{{ MYUSER }}"
+      home: "/home/{{ MYUSER }}"
+      shell: /bin/bash
+      state: present
+      uid: 1001
+
+  - name: add user to sudoers
+    copy:
+      dest: "/etc/sudoers.d/ansible"
+      content: "ansible     ALL=(ALL)     NOPASSWD: ALL"
+
+  - name: add key to authorized_keys
+    authorized_key:
+      user: ansible
+      state: present
+      key: "{{ ANS_SSHKEY }}"

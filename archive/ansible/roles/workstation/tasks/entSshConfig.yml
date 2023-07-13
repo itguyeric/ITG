@@ -1,0 +1,24 @@
+---
+- name: deploy work ssh config
+  copy:
+    src: sshConfigOTLC
+    dest: "/home/{{ MYUSER }}/.ssh/include/otlc.conf"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0644"
+
+- name: copy gss key
+  copy:
+    src: id_rsa_gss
+    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_gss"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600"     
+
+- name: copy otlc key
+  copy:
+    src: id_rsa_otlc
+    dest: "/home/{{ MYUSER }}/.ssh/id_rsa_otlc"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: "0600" 

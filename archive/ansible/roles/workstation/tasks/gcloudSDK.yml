@@ -1,0 +1,24 @@
+---
+# Instructions: https://cloud.google.com/sdk/docs/downloads-yum
+
+- name: setup Google Cloud repository
+  yum_repository:
+    name: google-cloud-sdk
+    baseurl: https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+    description: Repository Google Cloud SDK
+    enabled: yes
+    file: google-cloud-sdk
+    gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg
+            https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    skip_if_unavailable: yes
+
+- name: install google-cloud-sdk
+  package:
+    name: google-cloud-sdk
+    state: latest
+
+- name: disable useage reports
+  shell: gcloud config set disable_useage_reporting false
+
+#- name: deploy google-cloud-sdk config

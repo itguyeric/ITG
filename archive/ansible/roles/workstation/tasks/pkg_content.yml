@@ -1,0 +1,19 @@
+---
+- name: install content flatpaks
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+  with_items:
+    - org.audacityteam.Audacity # Audacity
+    - com.obsproject.Studio     # OBS Studio
+    - com.uploadedlobster.peek  # Peek Screen Recorder
+
+- name: install content packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - ffmpeg
+    - gimp
+    - youtube-dl

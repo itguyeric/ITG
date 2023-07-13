@@ -1,0 +1,8 @@
+---
+- name: registering with RH access
+  when: ansible_facts['distribution'] == "RedHat"
+  redhat_subscription:
+    state: present
+    activationkey: itg2022 
+    org_id: '12919288'
+    pool_ids: 8a85f99b7db4828b017dcab823375ad1

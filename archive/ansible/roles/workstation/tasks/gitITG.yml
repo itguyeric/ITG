@@ -1,0 +1,37 @@
+---
+- name: create home git directory
+  file:
+    path: "/home/{{ MYUSER }}/git"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0755'
+    recurse: yes
+    state: directory
+
+- name: download ansible repo
+  become_user: "{{ MYUSER }}"
+  git:
+    repo: git@gitlab.com:itguyeric/itg-ans.git
+    dest: "/home/{{ MYUSER }}/git/itg-ans"
+    force: yes
+
+- name: download itg repo
+  become_user: "{{ MYUSER }}"
+  git:
+    repo: git@gitlab.com:itguyeric/itg.git
+    dest: "/home/{{ MYUSER }}/git/itg"
+    force: yes
+
+- name: download talk repo
+  become_user: "{{ MYUSER }}"
+  git:
+    repo: git@gitlab.com:itguyeric/talks.git
+    dest: "/home/{{ MYUSER }}/git/talks"
+    force: yes
+
+- name: download itguyeric website repo
+  become_user: "{{ MYUSER }}"
+  git:
+    repo: git@gitlab.com:itguyeric/itguyeric.git
+    dest: "/home/{{ MYUSER }}/git/itguyeric"
+    force: yes

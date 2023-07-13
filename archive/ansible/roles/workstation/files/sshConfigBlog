@@ -1,0 +1,11 @@
+Host blog
+  Hostname blog.itguyeric.com
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_rsa_do
+
+  Host redirect
+    Hostname itg-prd-rock01.theitguy.rocks
+    Port 22
+    User root
+    IdentityFile ~/.ssh/id_rsa_do

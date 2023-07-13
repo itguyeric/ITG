@@ -1,0 +1,31 @@
+---
+- name: add lkiesow repository
+  #become: yes
+  yum_repository:
+    name: copr.fedorainfracloud.org:lkiesow:g810-led
+    baseurl: https://copr-be.cloud.fedoraproject.org/results/lkiesow/g810-led/fedora-$releasever-$basearch/
+    description: Copr repo for g810-led owned by lkiesow
+    enabled: yes
+    file: g810-led
+    gpgcheck: yes
+    gpgkey: https://copr-be.cloud.fedoraproject.org/results/lkiesow/g810-led/pubkey.gpg
+    skip_if_unavailable: yes
+
+- name: install g810-led package
+  #become: yes
+  package:
+    name: g810-led
+    state: latest
+
+- name: deploy g910 config
+  #become: yes
+  copy:
+    src: "g910/{{ G910_PROFILE }}"
+    dest: /etc/g810-led/profile
+    owner: root
+    group: root
+    mode: '0644'
+
+# TODO: Apply only if device connected?
+#- name: apply g910 config
+#  shell: /usr/bin/g810-led -p /etc/g810-led/profile

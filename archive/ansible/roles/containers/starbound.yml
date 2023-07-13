@@ -1,0 +1,11 @@
+---
+- name: Using Podman collection
+  hosts: itg-prd-star
+  collections:
+    - containers.podman
+  tasks:
+    - name: building starbound container
+      podman_image:
+        name: starbound
+        path: /var/lib/containers/starbound
+        push: yes

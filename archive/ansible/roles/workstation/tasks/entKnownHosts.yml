@@ -1,0 +1,14 @@
+---
+- name: add gsslab as known host
+  known_hosts:
+    state: present
+    path: "/home/{{ MYUSER }}/.ssh/known_hosts"
+    name: ravshello.gsslab.rdu2.redhat.com
+    key: ravshello.gsslab.rdu2.redhat.com,10.0.128.114 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNF0TvI2lGHp7ViJuwscX4COB2ug44Vcmr3VO9qO/SthmH2Zf1h/gUIi8DUhxGIWrGgKRVwxYjJXIspIIw96KfE=
+
+- name: set known_hosts permissions
+  file:
+    path: "/home/{{ MYUSER }}/.ssh/known_hosts"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0644'

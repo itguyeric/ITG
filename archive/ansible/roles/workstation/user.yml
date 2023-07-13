@@ -1,0 +1,7 @@
+---
+- hosts: workstations
+  become: "{{ MYUSER }}"
+  gather_facts: no
+  tasks:
+    - name: reset permissions
+      import_tasks: tasks/sshUserConfig.yml

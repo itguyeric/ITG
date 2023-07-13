@@ -1,0 +1,46 @@
+# Documentation: https://docs.ansible.com/ansible/latest/modules/list_of_cloud_modules.html?highlight=digital_ocean#digital-ocean
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+  - DO_API_TOKEN: 740be747ad0307d17ac33d268032425cb41beb3426d09b47d627c9baeba1e4e3
+
+  tasks:
+  - digital_ocean_domain:
+      state: present
+      name: theitguy.rocks
+      ip: 104.198.147.218
+
+  - digital_ocean_droplet:
+      unique_name: yes
+      region: nyc3
+      image: centos-7-x64
+      wait: yes
+      name: "itg-do-jmp01"
+      backups: no
+      ipv6: no
+      monitoring: yes
+      private_networking: yes
+      ssh_keys: 3b:83:a4:17:d6:d4:0b:f2:a3:e4:aa:ec:7f:8c:fa:1d
+      size_id: s-1vcpu-1gb
+      state: present
+    register: created_droplet
+
+  - digital_ocean_tag:
+      name: docker
+      resource_id: "{{ created_droplet.data.droplet.id }}"
+      state: present
+    register: tag_response
+
+  - digital_ocean_domain:
+      state: present
+      name: "{{ created_droplet.data.droplet.name }}.theitguy.rocks"
+      ip: "{{ created_droplet.data.ip_address }}"
+
+  - name: add hosts
+    add_host:
+      name: "{{ created_droplet.data.ip_address }}"
+      groups: "digitalocean"

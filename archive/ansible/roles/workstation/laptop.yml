@@ -1,0 +1,7 @@
+---
+- hosts: laptops
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: install laptop utilities
+      import_tasks: tasks/laptop-utils.yml

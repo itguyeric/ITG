@@ -1,0 +1,10 @@
+---
+- hosts: work
+  become: yes
+  gather_facts: no
+  tasks:
+     - name: deploy work ssh config
+       import_tasks: tasks/entSshConfig.yml
+
+     - name: deploy work known hosts
+       import_tasks: tasks/entKnownHosts.yml

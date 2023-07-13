@@ -1,0 +1,10 @@
+---
+- hosts: digitalOcean
+  become: yes
+  gather_facts: no
+  tasks:
+#    - name: bootstrap droplet
+#      import_tasks: tasks/do_bootstrap.yml
+
+    - name: deploy droplet monitoring
+      import_tasks: tasks/do_monitor.yml

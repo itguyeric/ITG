@@ -1,0 +1,10 @@
+---
+- name: install gaming software
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+#TODO: Move to vars file
+  with_items:
+    - com.mojang.Minecraft     # Minecraft
+    - com.valvesoftware.Steam  # Steam

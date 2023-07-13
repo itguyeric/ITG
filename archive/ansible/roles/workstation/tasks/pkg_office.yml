@@ -1,0 +1,9 @@
+---
+- name: install office flatpaks
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+  with_items:
+    - com.calibre_ebook.calibre   # Calibre
+    - com.github.alainm23.planner # Planner ToDoIst

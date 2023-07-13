@@ -1,0 +1,9 @@
+---
+- name: deploy bashrc file
+  # TODO: Create variables for single task deployment, move to common
+  copy:
+    src: dotBashProfile-mac
+    dest: "/home/{{ MYUSER }}/.bash_profile"
+    owner: "{{ MYUSER }}"
+    group: "{{ MYUSER }}"
+    mode: '0644'

@@ -1,0 +1,6 @@
+---
+- name: install laptop utilities
+  package:
+    name: powertop
+    state: latest
+# TODO: Move to vars file
