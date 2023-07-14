@@ -1,0 +1,41 @@
+---
+# Adapted from https://encoretechnologies.github.io/blog/2018/06/ansiblepatchingautomation/
+
+- name: update packages
+  package:
+    name: "*"
+    state: latest
+
+- name: compare kernel versions
+  # TODO: Move to handler
+  shell: |
+    LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+    CURRENT_KERNEL=$(uname -r)
+
+    if [[ $LAST_KERNEL != $CURRENT_KERNEL ]]; then
+      # Set reboot flag
+      touch /tmp/reboot
+    fi
+
+- name: check for reboot flag
+  stat:
+    path: /tmp/reboot
+  register: reboot
+
+- name: clear reboot flag
+  file:
+    path: /tmp/reboot
+    state: absent
+  when: reboot.stat.exists == true
+
+- name: rebooting host
+  shell: sleep 2 && /sbin/shutdown -r now "Reboot required for updated kernel" && sleep 2
+  async: 20
+  poll: 0
+  when: reboot.stat.exists == true
+
+- name: waiting for hosts to reboot
+  wait_for_connection:
+    delay: 60
+    timeout: 300
+  when: reboot.stat.exists == true

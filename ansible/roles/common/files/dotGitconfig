@@ -1,0 +1,9 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Eric The IT Guy
+	email = contact@itguyeric.com
+[push]
+	default = simple
+[pull]
+	rebase  = false
