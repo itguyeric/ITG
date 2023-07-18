@@ -1,0 +1,9 @@
+Include ~/.ssh/include/*
+
+#Host *
+#IdentitiesOnly yes
+#IdentityFile ~/.ssh/id_rsa_eh
+
+Host itg-fed-jump
+IdentitiesOnly yes
+IdentityFile ~/.ssh/itg

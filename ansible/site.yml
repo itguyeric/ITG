@@ -1,0 +1,9 @@
+---
+- import_playbook: roles/common/main.yml
+#- import_playbook: roles/workstation/main.yml
+#- import_playbook: roles/workstation/user.yml
+#- import_playbook: roles/mac/main.yml
+#- import_playbook: roles/workstation/laptop.yml
+#- import_playbook: roles/workstation/work.yml
+#- import_playbook: roles/server/digitalocean.yml
+#- import_playbook: roles/server/main.yml
