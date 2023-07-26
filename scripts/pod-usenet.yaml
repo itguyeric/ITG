@@ -1,0 +1,207 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.4.1
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options: /var/lib/containers/usenet/sonarr:z
+    io.containers.autoupdate/bazarr: registry
+    io.containers.autoupdate/lidarr: registry
+    io.containers.autoupdate/nzbget: registry
+    io.containers.autoupdate/radarr: registry
+    io.containers.autoupdate/readarr: registry
+    io.containers.autoupdate/sonarr: registry
+  creationTimestamp: "2023-07-25T23:28:35Z"
+  labels:
+    app: usenet
+  name: usenet
+spec:
+  containers:
+  - env:
+    - name: TZ
+      value: America/Chicago
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/bazarr:latest
+    name: bazarr
+    ports:
+    - containerPort: 1900
+      hostPort: 1900
+    - containerPort: 5353
+      hostPort: 5353
+    - containerPort: 6767
+      hostPort: 6767
+    - containerPort: 6789
+      hostPort: 6789
+    - containerPort: 7878
+      hostPort: 7878
+    - containerPort: 8686
+      hostPort: 8686
+    - containerPort: 8787
+      hostPort: 8787
+    - containerPort: 8989
+      hostPort: 8989
+    - containerPort: 9091
+      hostPort: 9091
+    resources: {}
+    volumeMounts:
+    - mountPath: /config
+      name: var-lib-containers-usenet-bazarr-host-0
+    - mountPath: /movies
+      name: media-movies-host-1
+    - mountPath: /tv
+      name: media-tv-host-2
+  - env:
+    - name: TZ
+      value: America/Chicago
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/lidarr:latest
+    name: lidarr
+    resources: {}
+    volumeMounts:
+    - mountPath: /downloads
+      name: media-downloads-host-0
+    - mountPath: /media
+      name: media-host-1
+    - mountPath: /config
+      name: var-lib-containers-usenet-lidarr-host-2
+  - env:
+    - name: TZ
+      value: America/Chicago
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/nzbget:latest
+    name: nzbget
+    resources: {}
+    volumeMounts:
+    - mountPath: /config
+      name: var-lib-containers-usenet-nzbget-host-0
+    - mountPath: /downloads
+      name: media-downloads-host-1
+    - mountPath: /media
+      name: media-host-2
+  - env:
+    - name: TZ
+      value: America/Chicago
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/radarr:latest
+    name: radarr
+    resources: {}
+    volumeMounts:
+    - mountPath: /media
+      name: media-host-0
+    - mountPath: /config
+      name: var-lib-containers-usenet-radarr-host-1
+    - mountPath: /downloads
+      name: media-downloads-host-2
+  - env:
+    - name: PUID
+      value: "1000"
+    - name: TZ
+      value: America/Chicago
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/readarr:develop
+    name: readarr
+    resources: {}
+    volumeMounts:
+    - mountPath: /config
+      name: var-lib-containers-usenet-readarr-host-0
+    - mountPath: /downloads
+      name: media-downloads-host-1
+    - mountPath: /books
+      name: media-books-host-2
+  - env:
+    - name: TZ
+      value: America/Chicago
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    image: lscr.io/linuxserver/sonarr:latest
+    name: sonarr
+    resources: {}
+    volumeMounts:
+    - mountPath: /downloads
+      name: media-downloads-host-0
+    - mountPath: /media
+      name: media-host-1
+    - mountPath: /config
+      name: var-lib-containers-usenet-sonarr-host-2
+  hostname: usenet
+  restartPolicy: Never
+  volumes:
+  - hostPath:
+      path: /media/movies
+      type: Directory
+    name: media-movies-host-1
+  - hostPath:
+      path: /var/lib/containers/usenet/nzbget
+      type: Directory
+    name: var-lib-containers-usenet-nzbget-host-0
+  - hostPath:
+      path: /media
+      type: Directory
+    name: media-host-0
+  - hostPath:
+      path: /var/lib/containers/usenet/readarr
+      type: Directory
+    name: var-lib-containers-usenet-readarr-host-0
+  - hostPath:
+      path: /media/tv
+      type: Directory
+    name: media-tv-host-2
+  - hostPath:
+      path: /media
+      type: Directory
+    name: media-host-1
+  - hostPath:
+      path: /media/downloads
+      type: Directory
+    name: media-downloads-host-0
+  - hostPath:
+      path: /var/lib/containers/usenet/lidarr
+      type: Directory
+    name: var-lib-containers-usenet-lidarr-host-2
+  - hostPath:
+      path: /media/books
+      type: Directory
+    name: media-books-host-2
+  - hostPath:
+      path: /var/lib/containers/usenet/bazarr
+      type: Directory
+    name: var-lib-containers-usenet-bazarr-host-0
+  - hostPath:
+      path: /media/downloads
+      type: Directory
+    name: media-downloads-host-1
+  - hostPath:
+      path: /media
+      type: Directory
+    name: media-host-2
+  - hostPath:
+      path: /var/lib/containers/usenet/radarr
+      type: Directory
+    name: var-lib-containers-usenet-radarr-host-1
+  - hostPath:
+      path: /media/downloads
+      type: Directory
+    name: media-downloads-host-2
+  - hostPath:
+      path: /var/lib/containers/usenet/sonarr
+      type: Directory
+    name: var-lib-containers-usenet-sonarr-host-2
+status: {}
+
