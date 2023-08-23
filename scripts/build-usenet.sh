@@ -2,17 +2,17 @@
 # Creates a pod for Plex and associated services
 
 printf "\nDefining Variables...\n\n"
-export USEUID=1000
-export USEGID=1000
+export USEUID=2000
+export USEGID=2000
 export PODDIR=/var/lib/containers
 
 printf "\nCleaning up...\n\n"
-/bin/systemctl stop pod-usenet.service
+#/bin/systemctl stop pod-usenet.service
 #/bin/systemctl stop container-plex.service
 #/usr/bin/podman stop plex
 #/usr/bin/podman rm plex
-/usr/bin/podman pod stop usenet
-/usr/bin/podman pod rm usenet
+#/usr/bin/podman pod stop usenet
+#/usr/bin/podman pod rm usenet
 #/usr/bin/podman rmi -a -f
 #rm -f /etc/systemd/system/container* /etc/systemd/system/pod-*.service
 
@@ -53,7 +53,7 @@ printf "\nPulling containers...\n\n"
 #/usr/bin/podman run -d --name plex-app --pod plex --label "io.containers.autoupdate=registry" --device=/dev/dri:/dev/dri -e PUID=$USEUID -e PGID=$USEGID -e TZ="America/Chicago" -e PLEX_CLAIM=$1 -v $PODDIR/plex:/config/Library/Application\ Support/Plex\ Media\ Server/:z -v /media:/data -v $PODDIR/plex/transcode:/transcode:z docker.io/plexinc/pms-docker
 
 printf "\nConfiguring services...\n\n"
-/usr/bin/podman generate kube usenet > ~/git/itg-lab/podman/pod-usenet.yaml
+/usr/bin/podman generate kube usenet > ~/mnt/depot/podman/pod-usenet.yaml
 #mv -f ./pod-usenet.yaml /media/configs/
 /usr/bin/podman generate systemd -n -f usenet
 #/usr/bin/podman generate systemd -n -f plex

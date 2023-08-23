@@ -39,9 +39,13 @@ pe "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem https://ftp.redhat.com/red
 
 pe "curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo"
 
+pe "clear"
+
 pe "yum repolist"
 
 pe "yum install -y convert2rhel"
+
+pe "clear"
 
 pe "convert2rhel --org 12919288 --activationkey convert2rhel -y"
 
