@@ -1,2 +1,7 @@
 ---
-- import_playbook: ???
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Running common role
+      import_playbook: roles/common/main.yml
