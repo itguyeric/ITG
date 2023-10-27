@@ -1,9 +1,0 @@
-Host gitlab.com
-  Hostname gitlab.com
-  PubkeyAcceptedKeyTypes=+ssh-rsa
-  IdentityFile ~/.ssh/gitLabCom
-
-#Host itg-prd-glab
-#  Hostname itg-prd-glab
-#  PubkeyAcceptedKeyTypes=+ssh-rsa
-#  IdentityFile ~/.ssh/id_rsa_itg

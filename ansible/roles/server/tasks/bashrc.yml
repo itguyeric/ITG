@@ -1,9 +1,0 @@
----
-- name: deploy bashrc file
-  # TODO: Create variables for single task deployment, move to common
-  copy:
-    src: dotBashrc
-    dest: "/home/{{ MYUSER }}/.bashrc"
-    owner: "{{ MYUSER }}"
-    group: "{{ MYUSER }}"
-    mode: '0644'
