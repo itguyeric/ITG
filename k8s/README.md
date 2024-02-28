@@ -1,7 +1,7 @@
 # Resources used to build my cluster
 
-https://medium.com/@shashank.chp09/configuring-kubernetes-cluster-through-kubeadm-utility-on-centos-stream9-with-containerd-54fdd998ddb4
-https://sysadmins.co.za/achieving-high-availability-with-haproxy-and-keepalived-building-a-redundant-load-balancer/
-https://nerc-project.github.io/nerc-docs/other-tools/kubernetes/kubeadm/HA-clusters-with-kubeadm/#deploy-a-k8s-dashboard
-https://upcloud.com/resources/tutorials/deploy-kubernetes-dashboard
-https://blog.thenets.org/managing-multiples-kubernetes-clusters-with-kubectl/
+* https://medium.com/@shashank.chp09/configuring-kubernetes-cluster-through-kubeadm-utility-on-centos-stream9-with-containerd-54fdd998ddb4
+* https://sysadmins.co.za/achieving-high-availability-with-haproxy-and-keepalived-building-a-redundant-load-balancer/
+* https://nerc-project.github.io/nerc-docs/other-tools/kubernetes/kubeadm/HA-clusters-with-kubeadm/#deploy-a-k8s-dashboard
+* https://upcloud.com/resources/tutorials/deploy-kubernetes-dashboard
+* https://blog.thenets.org/managing-multiples-kubernetes-clusters-with-kubectl/
