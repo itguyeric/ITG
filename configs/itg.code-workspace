@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../instruqt"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../certified-kubernetes-administrator-course"
+		},
+		{
+			"path": "../../demo-magic"
+		},
+		{
+			"path": "../../helm-labs"
+		}
+	]
+}
