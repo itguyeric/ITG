@@ -25,25 +25,32 @@
 # text color
 # DEMO_CMD_COLOR=$BLACK
 
+# setup
+
+dnf install -y kpatch
+
 # hide the evidence
 clear
-
 
 # put your demo awesomeness here
 
 pei "cat /etc/redhat-release"
 
-pe "dnf info kptch"
+pe "dnf info kpatch"
 
 pe "kpatch list"
 
-pe "uname -r"
+clear
+
+pei "uname -r"
 
 pe "dnf list available kpatch-patch*284*"
 
 pe "dnf -y install "kpatch-patch = $(uname -r)""
 
-pe "kpatch list"
+clear
+
+pei "kpatch list"
 
 pe "rpm -q --changelog $(rpm -qa | grep kpatch-patch)"
 
