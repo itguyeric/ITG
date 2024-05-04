@@ -27,7 +27,8 @@
 
 # setup
 
-dnf install -y kpatch
+echo "Configuring demo..."
+dnf install -y kpatch > /dev/null 2>&1
 
 # hide the evidence
 clear
@@ -40,15 +41,15 @@ pe "dnf info kpatch"
 
 pe "kpatch list"
 
-clear
+pe "clear"
 
 pei "uname -r"
 
 pe "dnf list available kpatch-patch*284*"
 
-pe "dnf -y install "kpatch-patch = $(uname -r)""
+pe "dnf -y install 'kpatch-patch = $(uname -r)'"
 
-clear
+pe "clear"
 
 pei "kpatch list"
 
