@@ -4,12 +4,16 @@
 
 TOKEN=$1
 
-dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-dnf clean all
-dnf install -y git pv
-mkdir ~/git && cd ~/git/
-git clone https://github.com/paxtonhare/demo-magic.git
-git clone https://oauth2:$TOKEN@gitlab.com/itguyeric/itg.git
-cd ~/git/itg/demo-magic
 clear
-ls -lh
+touch ~/demoMagic_installer.log
+echo "Installing epel repository..."
+dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm >> ~/demoMagic_installer.log 2>&1
+dnf clean all >> ~/demoMagic_installer.log 2>&1
+echo "Installing git and pv..."
+dnf install -y git pv >> ~/demoMagic_installer.log 2>&1
+echo "Cloning repositories..."
+mkdir ~/git && cd ~/git/
+git clone https://github.com/paxtonhare/demo-magic.git  >> ~/demoMagic_installer.log 2>&1
+git clone https://oauth2:$TOKEN@gitlab.com/itguyeric/itg.git  >> ~/demoMagic_installer.log 2>&1
+echo "Available demos:"
+ls -lh ~/git/itg/demo-magic
