@@ -14,9 +14,6 @@
 		},
 		{
 			"path": "../../helm-labs"
-		},
-		{
-			"path": "../../sample-python-weather"
 		}
 	]
 }
