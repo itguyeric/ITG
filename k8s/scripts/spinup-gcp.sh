@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to deploy and update k8s on GCP
+# Script to deploy, upgrade, and delete k8s on GCP
 
 GCLOUD_CMD=/usr/bin/gcloud
 KUBECTL_CMD=/usr/bin/kubectl
@@ -10,7 +10,7 @@ NUM_NODES=${NUM_NODES:-3}
 
 create_cluster() {
   echo "Creating Kubernetes cluster..."
-  $GCLOUD_CMD container clusters create $CLUSTER --zone $ZONE --num-nodes $NUM_NODES > /var/log/gcloud_cluster_creation.log 2>&1
+  $GCLOUD_CMD container clusters create $CLUSTER --zone $ZONE --num-nodes $NUM_NODES
   if [ $? -ne 0 ]; then
     echo "Cluster creation failed."
     exit 1
@@ -49,11 +49,25 @@ check_cluster_status() {
   $KUBECTL_CMD get pods --all-namespaces
 }
 
-main() {
-  create_cluster
-  get_credentials
-  upgrade_cluster
-  check_cluster_status
+delete_cluster() {
+  echo "Deleting Kubernetes cluster..."
+  $GCLOUD_CMD container clusters delete $CLUSTER --zone $ZONE --quiet
+  if [ $? -ne 0 ]; then
+    echo "Cluster deletion failed."
+    exit 1
+  fi
+  echo "Cluster deleted successfully."
 }
 
-main
+main() {
+  if [ "$1" == "delete" ]; then
+    delete_cluster
+  else
+    create_cluster
+    get_credentials
+    upgrade_cluster
+    check_cluster_status
+  fi
+}
+
+main $1
