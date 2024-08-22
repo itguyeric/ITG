@@ -1,0 +1,59 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraft-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: civo-mc-bedrock 
+  labels:
+    app: civo-mc-bedrock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: civo-mc-bedrock
+  template:
+    metadata:
+      labels:
+        app: civo-mc-bedrock
+    spec:
+      containers:
+      - name: civo-mc-bedrock
+        image: itzg/minecraft-bedrock-server
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        env:
+        - name: EULA
+          value: "TRUE"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: civo-mc-bedrock
+  labels:
+    app: civo-mc-bedrock
+spec:
+  selector:
+    app: civo-mc-bedrock
+  ports:
+    - port: 19132
+      protocol: UDP
