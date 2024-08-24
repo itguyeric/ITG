@@ -1,0 +1,14 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: itguyeric
+  namespace: itguyeric
+spec:
+  releaseName: itguyeric-wordpress
+  chart:
+    repository: https://charts.bitnami.com/bitnami
+    name: wordpress
+    version: 10.1.2
+  values:
+    service:
+      type: LoadBalancer

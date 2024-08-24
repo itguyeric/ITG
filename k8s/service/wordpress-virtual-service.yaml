@@ -1,0 +1,18 @@
+# wordpress-virtual-service.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: itg-wordpress
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+      - 'wordpress.gcp.itguyeric.com'
+    routes:
+      - matchers:
+          - prefix: /
+        routeAction:
+          single:
+            upstream:
+              name: itguyeric-my-wordpress-80
+              namespace: gloo-system

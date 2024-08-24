@@ -3,10 +3,13 @@
 
 GCLOUD_CMD=/usr/bin/gcloud
 KUBECTL_CMD=/usr/bin/kubectl
+HELM_CMD=/usr/bin/helm
 
 CLUSTER=${CLUSTER:-itg-dev-01}
 ZONE=${ZONE:-us-central1-a}
 NUM_NODES=${NUM_NODES:-3}
+NAMESPACE=${NAMESPACE:-itguyeric}
+YAML_DIR=${YAML_DIR:-$(pwd)/helm}
 
 create_cluster() {
   echo "Creating Kubernetes cluster..."
@@ -26,6 +29,11 @@ get_credentials() {
   fi
 }
 
+create_namespace() {
+  echo "Creating namespace $NAMESPACE..."
+  $KUBECTL_CMD create namespace $NAMESPACE || echo "Namespace $NAMESPACE already exists."
+}
+
 upgrade_cluster() {
   echo "Upgrading master..."
   $GCLOUD_CMD container clusters upgrade $CLUSTER --master --zone $ZONE --quiet
@@ -42,11 +50,22 @@ upgrade_cluster() {
   fi
 }
 
-check_cluster_status() {
-  echo "Checking cluster status..."
-  $KUBECTL_CMD get nodes
-  echo ""
-  $KUBECTL_CMD get pods --all-namespaces
+add_helm_repos() {
+  echo "Adding Helm repositories..."
+  $HELM_CMD repo add bitnami https://charts.bitnami.com/bitnami
+  $HELM_CMD repo add nextcloud https://nextcloud.github.io/helm/
+  $HELM_CMD repo add itzg https://itzg.github.io/minecraft-server-charts/
+  $HELM_CMD repo add gloo https://storage.googleapis.com/solo-public-helm
+  $HELM_CMD repo update
+}
+
+apply_kubernetes_resources() {
+  echo "Applying Kubernetes resources from $YAML_DIR..."
+  
+  # Apply the YAML files for each application
+  $KUBECTL_CMD apply -f $YAML_DIR/wordpress.yaml --namespace $NAMESPACE
+  $KUBECTL_CMD apply -f $YAML_DIR/nextcloud.yaml --namespace $NAMESPACE
+  $KUBECTL_CMD apply -f $YAML_DIR/minecraft.yaml --namespace $NAMESPACE
 }
 
 delete_cluster() {
@@ -65,8 +84,10 @@ main() {
   else
     create_cluster
     get_credentials
+    create_namespace
+    add_helm_repos
     upgrade_cluster
-    check_cluster_status
+    apply_kubernetes_resources
   fi
 }
 

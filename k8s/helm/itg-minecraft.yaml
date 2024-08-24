@@ -1,0 +1,16 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: itg-minecraft
+  namespace: itguyeric
+spec:
+  releaseName: itg-minecraft
+  chart:
+    repository: https://itzg.github.io/minecraft-server-charts/
+    name: minecraft
+    version: 1.0.0
+  values:
+    minecraftServer:
+      eula: true
+    service:
+      type: LoadBalancer

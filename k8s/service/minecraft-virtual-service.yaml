@@ -1,0 +1,18 @@
+# minecraft-virtual-service.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: itg-minecraft
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+      - 'minecraft.gcp.itguyeric.com'
+    routes:
+      - matchers:
+          - prefix: /
+        routeAction:
+          single:
+            upstream:
+              name: itguyeric-my-minecraft-25565
+              namespace: gloo-system

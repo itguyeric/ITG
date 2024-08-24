@@ -1,0 +1,18 @@
+# nextcloud-virtual-service.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: itg-nextcloud
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+      - 'nextcloud.gcp.itguyeric.com'
+    routes:
+      - matchers:
+          - prefix: /
+        routeAction:
+          single:
+            upstream:
+              name: itguyeric-my-nextcloud-80
+              namespace: gloo-system
