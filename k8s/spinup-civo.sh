@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to deploy, upgrade, and delete k8s on Civo
+# Script to deploy, upgrade, and delete k8s on Civo with runtime tracking
 
 CIVO_CMD=/usr/local/bin/civo
 KUBECTL_CMD=/usr/bin/kubectl
@@ -9,9 +9,19 @@ CLUSTER=${CLUSTER:-itg-dev-01}
 NAMESPACE=${NAMESPACE:-itguyeric}
 YAML_DIR=${YAML_DIR:-$(pwd)/helm}
 
+# Function to calculate and display the runtime
+calculate_runtime() {
+  END_TIME=$(date +%s)
+  RUNTIME=$((END_TIME - START_TIME))
+  HOURS=$((RUNTIME / 3600))
+  MINUTES=$(((RUNTIME % 3600) / 60))
+  SECONDS=$((RUNTIME % 60))
+  printf "Total runtime: %02d:%02d:%02d\n" $HOURS $MINUTES $SECONDS
+}
+
 create_cluster() {
   echo "Creating Kubernetes cluster on Civo..."
-  $CIVO_CMD kubernetes create $CLUSTER --size=g4s.kube.medium --nodes=3 --wait
+  $CIVO_CMD kubernetes create $CLUSTER --size=g3.k3s.medium --nodes=3 --wait
   if [ $? -ne 0 ]; then
     echo "Cluster creation failed."
     exit 1
@@ -32,12 +42,20 @@ create_namespace() {
   $KUBECTL_CMD create namespace $NAMESPACE || echo "Namespace $NAMESPACE already exists."
 }
 
+upgrade_cluster() {
+  echo "Upgrading Kubernetes cluster on Civo..."
+  $CIVO_CMD kubernetes upgrade $CLUSTER
+  if [ $? -ne 0 ]; then
+    echo "Cluster upgrade failed."
+    exit 1
+  fi
+}
+
 add_helm_repos() {
   echo "Adding Helm repositories..."
   $HELM_CMD repo add bitnami https://charts.bitnami.com/bitnami
   $HELM_CMD repo add nextcloud https://nextcloud.github.io/helm/
   $HELM_CMD repo add itzg https://itzg.github.io/minecraft-server-charts/
-  $HELM_CMD repo add gloo https://storage.googleapis.com/solo-public-helm
   $HELM_CMD repo update
 }
 
@@ -63,15 +81,20 @@ delete_cluster() {
 }
 
 main() {
+  START_TIME=$(date +%s)  # Record the start time
+
   if [ "$1" == "delete" ]; then
     delete_cluster
   else
     create_cluster
     get_credentials
     create_namespace
+    upgrade_cluster
     add_helm_repos
     apply_kubernetes_resources
   fi
+
+  calculate_runtime  # Calculate and display the runtime at the end
 }
 
 main $1

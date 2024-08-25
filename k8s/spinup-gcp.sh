@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to deploy, upgrade, and delete k8s on GCP
+# Script to deploy, upgrade, and delete k8s on GCP with runtime tracking
 
 GCLOUD_CMD=/usr/bin/gcloud
 KUBECTL_CMD=/usr/bin/kubectl
@@ -10,6 +10,16 @@ ZONE=${ZONE:-us-central1-a}
 NUM_NODES=${NUM_NODES:-3}
 NAMESPACE=${NAMESPACE:-itguyeric}
 YAML_DIR=${YAML_DIR:-$(pwd)/helm}
+
+# Function to calculate and display the runtime
+calculate_runtime() {
+  END_TIME=$(date +%s)
+  RUNTIME=$((END_TIME - START_TIME))
+  HOURS=$((RUNTIME / 3600))
+  MINUTES=$(((RUNTIME % 3600) / 60))
+  SECONDS=$((RUNTIME % 60))
+  printf "Total runtime: %02d:%02d:%02d\n" $HOURS $MINUTES $SECONDS
+}
 
 create_cluster() {
   echo "Creating Kubernetes cluster..."
@@ -59,12 +69,14 @@ add_helm_repos() {
 }
 
 apply_kubernetes_resources() {
-  echo "Applying Kubernetes resources from $YAML_DIR..."
-  
-  # Apply the YAML files for each application
-  $KUBECTL_CMD apply -f $YAML_DIR/itg-wordpress.yaml --namespace $NAMESPACE
-  $KUBECTL_CMD apply -f $YAML_DIR/nextcloud.yaml --namespace $NAMESPACE
-  $KUBECTL_CMD apply -f $YAML_DIR/minecraft.yaml --namespace $NAMESPACE
+  echo "Deploying WordPress..."
+  $HELM_CMD install itguyeric-wordpress bitnami/wordpress --namespace $NAMESPACE --set service.type=LoadBalancer
+
+  echo "Deploying Nextcloud..."
+  $HELM_CMD install itguyeric-nextcloud nextcloud/nextcloud --namespace $NAMESPACE --set service.type=LoadBalancer
+
+  echo "Deploying Minecraft..."
+  $HELM_CMD install itguyeric-minecraft itzg/minecraft --namespace $NAMESPACE --set minecraftServer.eula=true --set service.type=LoadBalancer
 }
 
 delete_cluster() {
@@ -78,6 +90,8 @@ delete_cluster() {
 }
 
 main() {
+  START_TIME=$(date +%s)  # Record the start time
+
   if [ "$1" == "delete" ]; then
     delete_cluster
   else
@@ -88,6 +102,8 @@ main() {
     upgrade_cluster
     apply_kubernetes_resources
   fi
+
+  calculate_runtime  # Calculate and display the runtime at the end
 }
 
 main $1
