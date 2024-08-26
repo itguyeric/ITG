@@ -60,7 +60,20 @@ create_namespace() {
 
 upgrade_cluster() {
   echo "Fetching the latest Kubernetes version available on Civo..."
-  LATEST_VERSION=$($CIVO_CMD kubernetes versions | grep -v 'Default' | head -n 1 | awk '{print $1}')
+
+  # Detect the operating system
+  OS=$(uname)
+
+  if [ "$OS" == "Linux" ]; then
+    # Linux (GNU grep)
+    LATEST_VERSION=$($CIVO_CMD kubernetes versions | grep -oP '^\s*\K(\d+\.\d+\.\d+)' | head -n 1)
+  elif [ "$OS" == "Darwin" ]; then
+    # macOS (BSD grep)
+    LATEST_VERSION=$($CIVO_CMD kubernetes versions | awk '/^ *[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' | head -n 1)
+  else
+    echo "Unsupported operating system: $OS"
+    exit 1
+  fi
   
   if [ -z "$LATEST_VERSION" ]; then
     echo "Failed to fetch the latest version."
@@ -103,6 +116,12 @@ delete_cluster() {
     exit 1
   fi
   echo "Cluster deleted successfully."
+
+  # Remove the context, cluster, and user from the kubeconfig
+  kubectl config delete-context $CLUSTER
+  kubectl config delete-cluster $CLUSTER
+  kubectl config unset users.$CLUSTER
+  echo "Removed $CLUSTER configuration from ~/.kube/config"
 }
 
 main() {
