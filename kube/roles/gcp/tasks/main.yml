@@ -11,16 +11,13 @@
       machine_type: "{{ node_size }}"
       disk_size_gb: "{{ disk_size }}"
 
-- name: Configure kubectl to use the cluster
-  gcp_container_cluster_info:
-    cluster_name: "{{ cluster_name }}"
-    zone: "{{ zone }}"
+- name: Retrieve GKE cluster information
+  google.cloud.gcp_container_cluster_info:
+    location: "{{ zone }}"
     project: "{{ gcp_project }}"
-    credentials_file: "{{ gcp_service_account_file }}"
-  register: gke_kubeconfig
+    auth_kind: application
+  register: gke_cluster_info
 
-- name: Save kubeconfig for GKE
-  local_action:
-    module: lineinfile
-    path: "~/.kube/config"
-    line: "{{ gke_kubeconfig.stdout }}"
+- name: Configure kubectl to use the cluster
+  command: >
+    gcloud container clusters get-credentials {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }}

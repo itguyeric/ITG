@@ -1,0 +1,9 @@
+# roles/gcp/tasks/teardown.yml
+---
+- name: Delete GKE cluster
+  google.cloud.gcp_container_cluster:
+    name: "{{ cluster_name }}"
+    location: "{{ zone }}"
+    project: "{{ gcp_project }}"
+    state: absent
+    auth_kind: application

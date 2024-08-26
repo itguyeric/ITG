@@ -1,0 +1,7 @@
+# roles/do/tasks/teardown.yml
+---
+- name: Delete DigitalOcean Kubernetes cluster
+  community.digitalocean.digital_ocean_kubernetes_cluster:
+    name: "{{ cluster_name }}"
+    token: "{{ do_token }}"
+    state: absent

@@ -1,0 +1,17 @@
+# playbooks/teardown.yml
+---
+- name: Teardown the Kubernetes cluster
+  hosts: localhost
+  gather_facts: no
+
+  vars_prompt:
+    - name: "cloud_provider"
+      prompt: "Choose cloud provider to teardown (do, civo, gcp)"
+      private: no
+
+  tasks:
+    - name: Include provider-specific variables
+      include_vars: "../vars/{{ cloud_provider }}.yml"
+
+    - name: Run the teardown tasks
+      include_tasks: "../roles/{{ cloud_provider }}/tasks/teardown.yml"

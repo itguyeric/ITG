@@ -22,16 +22,12 @@
         name: kubernetes
 
     - name: Run the namespace creation tasks
-      include_tasks: roles/kubernetes/tasks/itguyeric.yml
+      include_tasks: "../roles/kubernetes/tasks/itguyeric.yml"
 
     - name: Update the Kubernetes cluster to the latest version
       include_role:
         name: "{{ cloud_provider }}"
 
     - name: Run the update tasks
-      include_tasks: roles/{{ cloud_provider }}/tasks/update.yml
-
-    - name: Teardown the cluster
-      include_role:
-        name: teardown
+      include_tasks: "../roles/{{ cloud_provider }}/tasks/update.yml"
 

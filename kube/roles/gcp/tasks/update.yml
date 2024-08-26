@@ -2,19 +2,18 @@
 ---
 - name: Get the latest GKE master version
   google.cloud.gcp_container_cluster_info:
-    name: "{{ cluster_name }}"
-    zone: "{{ zone }}"
+    location: "{{ zone }}"
     project: "{{ gcp_project }}"
-    credentials_file: "{{ gcp_service_account_file }}"
+    auth_kind: application
   register: gcp_cluster_info
 
 - name: Update GKE cluster to the latest available version
   google.cloud.gcp_container_cluster:
     name: "{{ cluster_name }}"
-    zone: "{{ zone }}"
+    location: "{{ zone }}"
     project: "{{ gcp_project }}"
-    credentials_file: "{{ gcp_service_account_file }}"
-    node_version: "{{ gcp_cluster_info.instance.latestMasterVersion }}"
-    master_version: "{{ gcp_cluster_info.instance.latestMasterVersion }}"
+    node_version: "{{ gcp_cluster_info.resources[0].currentNodeVersion }}"
+    master_version: "{{ gcp_cluster_info.resources[0].currentMasterVersion }}"
+    auth_kind: application
     update: true
-  when: gcp_cluster_info.instance.currentMasterVersion != gcp_cluster_info.instance.latestMasterVersion
+  when: gcp_cluster_info.resources[0].currentMasterVersion != gcp_cluster_info.resources[0].currentNodeVersion
