@@ -21,7 +21,7 @@ if [ -z "$HELM_CMD" ]; then
   exit 1
 fi
 
-CLUSTER=${CLUSTER:-itg-dev-01}
+CLUSTER=${CLUSTER:-gcp-k8s-dev01}
 ZONE=${ZONE:-us-central1-a}
 NUM_NODES=${NUM_NODES:-3}
 NAMESPACE=${NAMESPACE:-itguyeric}
