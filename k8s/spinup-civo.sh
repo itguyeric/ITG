@@ -59,8 +59,16 @@ create_namespace() {
 }
 
 upgrade_cluster() {
-  echo "Upgrading Kubernetes cluster on Civo..."
-  $CIVO_CMD kubernetes upgrade $CLUSTER
+  echo "Fetching the latest Kubernetes version available on Civo..."
+  LATEST_VERSION=$($CIVO_CMD kubernetes versions | grep -v 'Default' | head -n 1 | awk '{print $1}')
+  
+  if [ -z "$LATEST_VERSION" ]; then
+    echo "Failed to fetch the latest version."
+    exit 1
+  fi
+
+  echo "Upgrading Kubernetes cluster on Civo to version $LATEST_VERSION..."
+  $CIVO_CMD kubernetes upgrade $CLUSTER --version=$LATEST_VERSION
   if [ $? -ne 0 ]; then
     echo "Cluster upgrade failed."
     exit 1
@@ -112,9 +120,4 @@ main() {
   fi
 
   # Switch to the Civo context
-  kubectl config use-context $(kubectl config get-contexts -o name | grep civo)
-
-  calculate_runtime  # Calculate and display the runtime at the end
-}
-
-main $1
+  kubectl config use-context $(kubectl config​⬤
