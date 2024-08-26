@@ -1,9 +1,25 @@
 #!/bin/bash
-# Script to deploy, upgrade, and delete k8s on Civo with runtime tracking
+# Script to deploy, upgrade, and delete k8s on Civo with runtime tracking, utility auto-detection, and context management
 
-CIVO_CMD=/usr/local/bin/civo
-KUBECTL_CMD=/usr/bin/kubectl
-HELM_CMD=/usr/bin/helm
+# Auto-detect the locations of civo, kubectl, and helm
+CIVO_CMD=$(which civo)
+KUBECTL_CMD=$(which kubectl)
+HELM_CMD=$(which helm)
+
+if [ -z "$CIVO_CMD" ]; then
+  echo "civo command not found. Please install it or add it to your PATH."
+  exit 1
+fi
+
+if [ -z "$KUBECTL_CMD" ]; then
+  echo "kubectl command not found. Please install it or add it to your PATH."
+  exit 1
+fi
+
+if [ -z "$HELM_CMD" ]; then
+  echo "helm command not found. Please install it or add it to your PATH."
+  exit 1
+fi
 
 CLUSTER=${CLUSTER:-itg-dev-01}
 NAMESPACE=${NAMESPACE:-itguyeric}
@@ -21,7 +37,7 @@ calculate_runtime() {
 
 create_cluster() {
   echo "Creating Kubernetes cluster on Civo..."
-  $CIVO_CMD kubernetes create $CLUSTER --size=g3.k3s.medium --nodes=3 --wait
+  $CIVO_CMD kubernetes create $CLUSTER --size=g4s.kube.medium --nodes=3 --wait
   if [ $? -ne 0 ]; then
     echo "Cluster creation failed."
     exit 1
@@ -56,6 +72,7 @@ add_helm_repos() {
   $HELM_CMD repo add bitnami https://charts.bitnami.com/bitnami
   $HELM_CMD repo add nextcloud https://nextcloud.github.io/helm/
   $HELM_CMD repo add itzg https://itzg.github.io/minecraft-server-charts/
+  $HELM_CMD repo add gloo https://storage.googleapis.com/solo-public-helm
   $HELM_CMD repo update
 }
 
@@ -93,6 +110,9 @@ main() {
     add_helm_repos
     apply_kubernetes_resources
   fi
+
+  # Switch to the Civo context
+  kubectl config use-context $(kubectl config get-contexts -o name | grep civo)
 
   calculate_runtime  # Calculate and display the runtime at the end
 }

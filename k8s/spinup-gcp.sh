@@ -1,9 +1,25 @@
 #!/bin/bash
-# Script to deploy, upgrade, and delete k8s on GCP with runtime tracking
+# Script to deploy, upgrade, and delete k8s on GCP with runtime tracking, utility auto-detection, and context management
 
-GCLOUD_CMD=/usr/bin/gcloud
-KUBECTL_CMD=/usr/bin/kubectl
-HELM_CMD=/usr/bin/helm
+# Auto-detect the locations of gcloud, kubectl, and helm
+GCLOUD_CMD=$(which gcloud)
+KUBECTL_CMD=$(which kubectl)
+HELM_CMD=$(which helm)
+
+if [ -z "$GCLOUD_CMD" ]; then
+  echo "gcloud command not found. Please install it or add it to your PATH."
+  exit 1
+fi
+
+if [ -z "$KUBECTL_CMD" ]; then
+  echo "kubectl command not found. Please install it or add it to your PATH."
+  exit 1
+fi
+
+if [ -z "$HELM_CMD" ]; then
+  echo "helm command not found. Please install it or add it to your PATH."
+  exit 1
+fi
 
 CLUSTER=${CLUSTER:-itg-dev-01}
 ZONE=${ZONE:-us-central1-a}
@@ -68,6 +84,12 @@ add_helm_repos() {
   $HELM_CMD repo update
 }
 
+install_nginx_ingress() {
+  echo "Installing NGINX Ingress Controller..."
+  $HELM_CMD repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  $HELM_CMD install nginx-ingress ingress-nginx/ingress-nginx --namespace $NAMESPACE
+}
+
 apply_kubernetes_resources() {
   echo "Deploying WordPress..."
   $HELM_CMD install itguyeric-wordpress bitnami/wordpress --namespace $NAMESPACE --set service.type=LoadBalancer
@@ -98,10 +120,14 @@ main() {
     create_cluster
     get_credentials
     create_namespace
-    add_helm_repos
     upgrade_cluster
+    add_helm_repos
+    install_nginx_ingress
     apply_kubernetes_resources
   fi
+
+  # Switch to the GCP context
+  kubectl config use-context $(kubectl config get-contexts -o name | grep gke)
 
   calculate_runtime  # Calculate and display the runtime at the end
 }
