@@ -1,0 +1,4 @@
+cluster_name: "do-kube-dev01"
+region: "nyc1"
+size: "s-2vcpu-4gb"
+node_count: 3

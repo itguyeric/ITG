@@ -1,0 +1,9 @@
+- hosts: digitalocean
+  vars_files:
+    - ../vars/digitalocean.yml
+  vars:
+    state: "{{ state | default('present') }}"
+  roles:
+    - role: digitalocean
+    - role: deploy_itg
+

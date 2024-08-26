@@ -1,0 +1,9 @@
+- hosts: civo
+  vars_files:
+    - ../vars/civo.yml
+  vars:
+    state: "{{ state | default('present') }}"
+  roles:
+    - role: civo
+    - role: deploy_itg
+

@@ -1,0 +1,9 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  vars:
+    state: "{{ state | default('present') }}"
+  roles:
+    - role: gcp
+    - role: deploy_itg
+

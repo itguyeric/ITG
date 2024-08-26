@@ -1,0 +1,14 @@
+all:
+  children:
+    gcp:
+      hosts:
+        localhost:
+          ansible_connection: local
+    civo:
+      hosts:
+        localhost:
+          ansible_connection: local
+    digitalocean:
+      hosts:
+        localhost:
+          ansible_connection: local

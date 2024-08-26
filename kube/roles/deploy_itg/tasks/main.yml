@@ -1,0 +1,5 @@
+---
+- name: Create itguyeric namespace
+  command: kubectl create namespace itguyeric
+  when: state == "present"
+  ignore_errors: yes

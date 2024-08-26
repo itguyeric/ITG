@@ -1,0 +1,37 @@
+---
+- name: Create Kubernetes cluster on DigitalOcean
+  command: doctl kubernetes cluster create {{ cluster_name }} --region {{ region }} --size {{ size }} --count {{ node_count }} --wait
+  when: state == "present"
+
+- name: Get Kubernetes credentials for DigitalOcean
+  command: doctl kubernetes cluster kubeconfig save {{ cluster_name }}
+  when: state == "present"
+
+- name: Fetch the latest Kubernetes version available on DigitalOcean
+  command: doctl kubernetes options versions | grep -oP '^ *\K[0-9]+\.[0-9]+\.[0-9]+' | head -n 1
+  register: latest_version
+  when: state == "present"
+
+- name: Upgrade Kubernetes cluster on DigitalOcean to the latest version
+  command: >
+    doctl kubernetes cluster upgrade {{ cluster_name }} --version {{ latest_version.stdout }} --wait
+  when: state == "present"
+
+- name: Delete Kubernetes cluster on DigitalOcean
+  command: doctl kubernetes cluster delete {{ cluster_name }} --force
+  when: state == "absent"
+
+- name: Remove context from kubeconfig
+  command: kubectl config delete-context do-{{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"
+
+- name: Remove cluster from kubeconfig
+  command: kubectl config delete-cluster do-{{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"
+
+- name: Remove user from kubeconfig
+  command: kubectl config unset users.do-{{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"

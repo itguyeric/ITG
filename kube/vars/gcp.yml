@@ -1,0 +1,3 @@
+cluster_name: "gcp-kube-dev01"
+zone: "us-central1-a"
+num_nodes: 3
