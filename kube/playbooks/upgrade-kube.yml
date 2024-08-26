@@ -1,0 +1,55 @@
+- hosts: all
+  vars_files:
+    - ../vars/gcp.yml
+    - ../vars/civo.yml
+    - ../vars/digitalocean.yml
+  tasks:
+
+    - block:
+        - name: Fetch the current Kubernetes master version on GCP
+          command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }} --format='value(currentMasterVersion)'
+          register: gcp_current_master_version
+          when: "'gcp' in groups"
+
+        - name: Debug current master version on GCP
+          debug:
+            msg: "GCP Current master version is {{ gcp_current_master_version.stdout }}"
+
+        - name: Upgrade Kubernetes master to the latest patch version on GCP
+          command: gcloud container clusters upgrade {{ cluster_name }} --master --zone {{ zone }} --quiet --project {{ gcp_project }}
+          when: "'gcp' in groups"
+
+      when: "'gcp' in groups"
+
+    - block:
+        - name: Fetch the current Kubernetes master version on Civo
+          command: civo kubernetes show {{ cluster_name }} --query='version'
+          register: civo_current_master_version
+          when: "'civo' in groups"
+
+        - name: Debug current master version on Civo
+          debug:
+            msg: "Civo Current master version is {{ civo_current_master_version.stdout }}"
+
+        - name: Upgrade Kubernetes cluster to the latest version on Civo
+          command: civo kubernetes upgrade {{ cluster_name }}
+          when: "'civo' in groups"
+
+      when: "'civo' in groups"
+
+    - block:
+        - name: Fetch the current Kubernetes master version on DigitalOcean
+          command: doctl kubernetes cluster get {{ cluster_name }} --format=Version --no-header
+          register: do_current_master_version
+          when: "'digitalocean' in groups"
+
+        - name: Debug current master version on DigitalOcean
+          debug:
+            msg: "DigitalOcean Current master version is {{ do_current_master_version.stdout }}"
+
+        - name: Upgrade Kubernetes cluster to the latest version on DigitalOcean
+          command: doctl kubernetes cluster upgrade {{ cluster_name }} --auto-approve
+          when: "'digitalocean' in groups"
+
+      when: "'digitalocean' in groups"
+

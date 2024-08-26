@@ -1,26 +1,73 @@
-- hosts: gcp
+- hosts: all
   vars_files:
     - ../vars/gcp.yml
-  collections:
-    - google.cloud
-
+    - ../vars/civo.yml
+    - ../vars/digitalocean.yml
   tasks:
-    - name: Delete Kubernetes cluster on GCP
-      google.cloud.gcp_container_cluster:
-        name: "{{ cluster_name }}"
-        location: "{{ zone }}"
-        project: "{{ gcp_project }}"
-        state: absent
 
-    - name: Remove context from kubeconfig
-      command: kubectl config delete-context {{ cluster_name }}
-      ignore_errors: yes
+    - block:
+        - name: Delete Kubernetes cluster on GCP
+          command: gcloud container clusters delete {{ cluster_name }} --zone {{ zone }} --quiet --project {{ gcp_project }}
+          when: "'gcp' in groups"
 
-    - name: Remove cluster from kubeconfig
-      command: kubectl config delete-cluster {{ cluster_name }}
-      ignore_errors: yes
+        - name: Remove context from kubeconfig on GCP
+          command: kubectl config delete-context {{ cluster_name }}
+          ignore_errors: yes
+          when: "'gcp' in groups"
 
-    - name: Remove user from kubeconfig
-      command: kubectl config unset users.{{ cluster_name }}
-      ignore_errors: yes
+        - name: Remove cluster from kubeconfig on GCP
+          command: kubectl config delete-cluster {{ cluster_name }}
+          ignore_errors: yes
+          when: "'gcp' in groups"
+
+        - name: Remove user from kubeconfig on GCP
+          command: kubectl config unset users.{{ cluster_name }}
+          ignore_errors: yes
+          when: "'gcp' in groups"
+
+      when: "'gcp' in groups"
+
+    - block:
+        - name: Delete Kubernetes cluster on Civo
+          command: civo kubernetes delete {{ cluster_name }} --yes
+          when: "'civo' in groups"
+
+        - name: Remove context from kubeconfig on Civo
+          command: kubectl config delete-context {{ cluster_name }}
+          ignore_errors: yes
+          when: "'civo' in groups"
+
+        - name: Remove cluster from kubeconfig on Civo
+          command: kubectl config delete-cluster {{ cluster_name }}
+          ignore_errors: yes
+          when: "'civo' in groups"
+
+        - name: Remove user from kubeconfig on Civo
+          command: kubectl config unset users.{{ cluster_name }}
+          ignore_errors: yes
+          when: "'civo' in groups"
+
+      when: "'civo' in groups"
+
+    - block:
+        - name: Delete Kubernetes cluster on DigitalOcean
+          command: doctl kubernetes cluster delete {{ cluster_name }} --force
+          when: "'digitalocean' in groups"
+
+        - name: Remove context from kubeconfig on DigitalOcean
+          command: kubectl config delete-context {{ cluster_name }}
+          ignore_errors: yes
+          when: "'digitalocean' in groups"
+
+        - name: Remove cluster from kubeconfig on DigitalOcean
+          command: kubectl config delete-cluster {{ cluster_name }}
+          ignore_errors: yes
+          when: "'digitalocean' in groups"
+
+        - name: Remove user from kubeconfig on DigitalOcean
+          command: kubectl config unset users.{{ cluster_name }}
+          ignore_errors: yes
+          when: "'digitalocean' in groups"
+
+      when: "'digitalocean' in groups"
 

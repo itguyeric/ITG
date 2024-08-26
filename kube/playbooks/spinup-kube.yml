@@ -1,0 +1,56 @@
+- hosts: all
+  vars_files:
+    - ../vars/gcp.yml
+    - ../vars/civo.yml
+    - ../vars/digitalocean.yml
+  tasks:
+    - block:
+        - name: Check if the Kubernetes cluster exists on GCP
+          google.cloud.gcp_container_cluster_info:
+            name: "{{ cluster_name }}"
+            location: "{{ zone }}"
+            project: "{{ gcp_project }}"
+          register: gcp_cluster_info
+          when: "'gcp' in groups"
+
+        - name: Create Kubernetes cluster on GCP
+          google.cloud.gcp_container_cluster:
+            name: "{{ cluster_name }}"
+            location: "{{ zone }}"
+            project: "{{ gcp_project }}"
+            node_pools:
+              - name: default-pool
+                initial_node_count: "{{ num_nodes }}"
+                config:
+                  disk_size_gb: "{{ disk_size }}"
+            state: present
+          when: gcp_cluster_info is failed
+
+      when: "'gcp' in groups"
+
+    - block:
+        - name: Check if the Kubernetes cluster exists on Civo
+          command: civo kubernetes show {{ cluster_name }}
+          register: civo_cluster_info
+          ignore_errors: true
+          when: "'civo' in groups"
+
+        - name: Create Kubernetes cluster on Civo
+          command: civo kubernetes create {{ cluster_name }} --nodes={{ num_nodes }} --size={{ node_size }}
+          when: civo_cluster_info is failed
+
+      when: "'civo' in groups"
+
+    - block:
+        - name: Check if the Kubernetes cluster exists on DigitalOcean
+          command: doctl kubernetes cluster get {{ cluster_name }}
+          register: do_cluster_info
+          ignore_errors: true
+          when: "'digitalocean' in groups"
+
+        - name: Create Kubernetes cluster on DigitalOcean
+          command: doctl kubernetes cluster create {{ cluster_name }} --region {{ region }} --count {{ num_nodes }} --size {{ node_size }}
+          when: do_cluster_info is failed
+
+      when: "'digitalocean' in groups"
+

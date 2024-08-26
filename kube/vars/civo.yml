@@ -1,4 +1,4 @@
+civo_token: "your_civo_api_token"
 cluster_name: "civo-kube-dev01"
-region: "NYC1"
-size: "g4s.kube.medium"
-node_count: 3
+num_nodes: 3
+node_size: "g4s.kube.medium"

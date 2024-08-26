@@ -8,24 +8,12 @@
         gcloud container clusters delete {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }} --quiet
       ignore_errors: yes
 
-    - name: Check if the context exists in kubeconfig
-      command: kubectl config get-contexts {{ cluster_name }}
-      register: context_check
-      ignore_errors: yes
-
     - name: Remove context from kubeconfig
       command: kubectl config delete-context {{ cluster_name }}
-      when: context_check.rc == 0
-      ignore_errors: yes
-
-    - name: Check if the cluster exists in kubeconfig
-      command: kubectl config get-clusters | grep {{ cluster_name }}
-      register: cluster_check
       ignore_errors: yes
 
     - name: Remove cluster from kubeconfig
       command: kubectl config delete-cluster {{ cluster_name }}
-      when: cluster_check.rc == 0
       ignore_errors: yes
 
     - name: Remove user from kubeconfig

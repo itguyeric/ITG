@@ -1,4 +1,6 @@
+do_token: "your_digitalocean_api_token"
 cluster_name: "do-kube-dev01"
-region: "nyc1"
-size: "s-2vcpu-4gb"
-node_count: 3
+region: "nyc3"
+num_nodes: 3
+node_size: "s-2vcpu-4gb"
+
