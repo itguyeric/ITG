@@ -1,4 +1,6 @@
+gcp_project: "just-cosmos-432700-m1"
 cluster_name: "gcp-kube-dev01"
 zone: "us-central1-a"
 num_nodes: 3
-disk_size: 10GB
+disk_size: 10
+

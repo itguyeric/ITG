@@ -1,0 +1,10 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
+
+  tasks:
+    - name: Include the upgrade tasks
+      import_tasks: ../roles/gcp/tasks/upgrade-k8s.yml
+
