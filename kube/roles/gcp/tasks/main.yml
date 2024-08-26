@@ -1,30 +1,26 @@
-- hosts: gcp
-  vars_files:
-    - ../vars/gcp.yml
-  collections:
-    - google.cloud
+# roles/gcp/tasks/main.yml
+---
+- name: Provision GKE cluster
+  google.cloud.gcp_container_cluster:
+    name: "{{ cluster_name }}"
+    location: "{{ zone }}"
+    initial_node_count: "{{ num_nodes }}"
+    project: "{{ gcp_project }}"
+    auth_kind: application
+    node_config:
+      machine_type: "{{ node_size }}"
+      disk_size_gb: "{{ disk_size }}"
 
-  tasks:
-    - name: Ensure Kubernetes cluster exists on GCP
-      google.cloud.gcp_container_cluster:
-        name: "{{ cluster_name }}"
-        location: "{{ zone }}"
-        project: "{{ gcp_project }}"
-        initial_node_count: "{{ num_nodes }}"
-        node_config:
-          disk_size_gb: "{{ disk_size }}"
-        state: present
+- name: Configure kubectl to use the cluster
+  gcp_container_cluster_info:
+    cluster_name: "{{ cluster_name }}"
+    zone: "{{ zone }}"
+    project: "{{ gcp_project }}"
+    credentials_file: "{{ gcp_service_account_file }}"
+  register: gke_kubeconfig
 
-    - name: Get Kubernetes credentials for GCP
-      google.cloud.gcp_container_cluster:
-        name: "{{ cluster_name }}"
-        location: "{{ zone }}"
-        project: "{{ gcp_project }}"
-        get_credentials: true
-
-    - name: Ensure itguyeric namespace exists
-      kubernetes.core.k8s_namespace:
-        name: itguyeric
-        state: present
-        kubeconfig: ~/.kube/config
-
+- name: Save kubeconfig for GKE
+  local_action:
+    module: lineinfile
+    path: "~/.kube/config"
+    line: "{{ gke_kubeconfig.stdout }}"

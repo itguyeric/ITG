@@ -1,0 +1,37 @@
+# playbooks/main.yml
+---
+- name: Choose cloud provider and deploy Kubernetes
+  hosts: localhost
+  gather_facts: no
+
+  vars_prompt:
+    - name: "cloud_provider"
+      prompt: "Choose cloud provider (do, civo, gcp)"
+      private: no
+
+  tasks:
+    - name: Include provider-specific variables
+      include_vars: "../vars/{{ cloud_provider }}.yml"
+
+    - name: Provision managed Kubernetes cluster
+      include_role:
+        name: "{{ cloud_provider }}"
+
+    - name: Create itguyeric namespace
+      include_role:
+        name: kubernetes
+
+    - name: Run the namespace creation tasks
+      include_tasks: roles/kubernetes/tasks/itguyeric.yml
+
+    - name: Update the Kubernetes cluster to the latest version
+      include_role:
+        name: "{{ cloud_provider }}"
+
+    - name: Run the update tasks
+      include_tasks: roles/{{ cloud_provider }}/tasks/update.yml
+
+    - name: Teardown the cluster
+      include_role:
+        name: teardown
+

@@ -1,0 +1,30 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
+
+  tasks:
+    - name: Ensure Kubernetes cluster exists on GCP
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        initial_node_count: "{{ num_nodes }}"
+        node_config:
+          disk_size_gb: "{{ disk_size }}"
+        state: present
+
+    - name: Get Kubernetes credentials for GCP
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        get_credentials: true
+
+    - name: Ensure itguyeric namespace exists
+      kubernetes.core.k8s_namespace:
+        name: itguyeric
+        state: present
+        kubeconfig: ~/.kube/config
+

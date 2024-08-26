@@ -3,42 +3,34 @@
     - ../vars/gcp.yml
     - ../vars/civo.yml
     - ../vars/digitalocean.yml
+
   tasks:
     - block:
         - name: Check if the Kubernetes cluster exists on GCP
           command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }}
           register: gcp_cluster_info
           ignore_errors: true
-          when: "'gcp' in groups"
-
         - name: Create Kubernetes cluster on GCP
-          command: gcloud container clusters create {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }} --num-nodes {{ num_nodes }} --disk-size {{ disk_size }}
+          command: gcloud container clusters create {{ cluster_name }} --zone {{ zone }} --num-nodes {{ num_nodes }} --disk-size {{ disk_size }} --project {{ gcp_project }}
           when: gcp_cluster_info is failed
-
-      when: "'gcp' in groups"
+      when: inventory_hostname in groups['gcp']
 
     - block:
         - name: Check if the Kubernetes cluster exists on Civo
           command: civo kubernetes show {{ cluster_name }}
           register: civo_cluster_info
           ignore_errors: true
-          when: "'civo' in groups"
-
         - name: Create Kubernetes cluster on Civo
           command: civo kubernetes create {{ cluster_name }} --nodes={{ num_nodes }} --size={{ node_size }}
           when: civo_cluster_info is failed
-
-      when: "'civo' in groups"
+      when: inventory_hostname in groups['civo']
 
     - block:
         - name: Check if the Kubernetes cluster exists on DigitalOcean
           command: doctl kubernetes cluster get {{ cluster_name }}
           register: do_cluster_info
           ignore_errors: true
-          when: "'digitalocean' in groups"
-
         - name: Create Kubernetes cluster on DigitalOcean
           command: doctl kubernetes cluster create {{ cluster_name }} --region {{ region }} --count {{ num_nodes }} --size {{ node_size }}
           when: do_cluster_info is failed
-
-      when: "'digitalocean' in groups"
+      when: inventory_hostname in groups['digitalocean']

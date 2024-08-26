@@ -1,0 +1,8 @@
+# roles/kubernetes/tasks/itguyeric.yml
+---
+- name: Create itguyeric namespace
+  kubernetes.core.k8s:
+    state: present
+    kind: Namespace
+    name: itguyeric
+    kubeconfig: ~/.kube/config

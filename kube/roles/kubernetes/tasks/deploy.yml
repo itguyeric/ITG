@@ -1,0 +1,23 @@
+# roles/kubernetes/tasks/deploy.yml
+---
+- name: Install Docker
+  ansible.builtin.apt:
+    name: docker.io
+    state: present
+
+- name: Install Kubernetes components
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: Initialize Kubernetes master node
+  command: kubeadm init
+  when: inventory_hostname == groups['k8s_nodes'][0]
+
+- name: Join worker nodes to the cluster
+  command: kubeadm join {{ groups['k8s_nodes'][0] }}:6443 --token <your_token> --discovery-token-ca-cert-hash sha256:<your_hash>
+  when: inventory_hostname != groups['k8s_nodes'][0]

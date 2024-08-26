@@ -1,0 +1,19 @@
+# roles/do/tasks/main.yml
+---
+- name: Provision DigitalOcean Kubernetes cluster
+  community.digitalocean.digital_ocean_kubernetes_cluster:
+    state: present
+    name: "{{ cluster_name }}"
+    region: "{{ region }}"
+    version: "latest"
+    node_pools:
+      - size: "{{ node_size }}"
+        count: "{{ num_nodes }}"
+    token: "{{ do_token }}"
+  register: do_k8s_cluster
+
+- name: Configure kubectl to use the cluster
+  command: >
+    doctl kubernetes cluster kubeconfig save "{{ cluster_name }}"
+  environment:
+    DO_API_TOKEN: "{{ do_token }}"

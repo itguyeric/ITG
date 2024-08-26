@@ -10,4 +10,4 @@ civo_token: !vault |
 cluster_name: "civo-kube-dev01"
 num_nodes: 3
 node_size: "g4s.kube.medium"
-region: "NYC1"
+region: "ORD1"

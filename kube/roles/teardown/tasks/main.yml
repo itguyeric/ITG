@@ -1,0 +1,24 @@
+# roles/teardown/tasks/main.yml
+---
+- name: Delete DigitalOcean Kubernetes cluster
+  community.digitalocean.digital_ocean_kubernetes_cluster:
+    state: absent
+    name: "{{ cluster_name }}"
+    token: "{{ do_token }}"
+  when: cloud_provider == 'do'
+
+- name: Delete Civo Kubernetes cluster
+  community.general.civo_kubernetes_cluster:
+    state: absent
+    name: "{{ cluster_name }}"
+    api_key: "{{ civo_token }}"
+  when: cloud_provider == 'civo'
+
+- name: Delete GKE cluster
+  google.cloud.gcp_container_cluster:
+    state: absent
+    name: "{{ cluster_name }}"
+    zone: "{{ zone }}"
+    project: "{{ gcp_project }}"
+    credentials_file: "{{ gcp_service_account_file }}"
+  when: cloud_provider == 'gcp'

@@ -1,0 +1,38 @@
+---
+- name: Create Kubernetes cluster on Civo
+  command: civo kubernetes create {{ cluster_name }} --size={{ size }} --nodes={{ node_count }} --region={{ region }} --wait
+  when: state == "present"
+
+- name: Get Kubernetes credentials for Civo
+  command: civo kubernetes config {{ cluster_name }} --save --local-path=$HOME/.kube/config
+  when: state == "present"
+
+- name: Fetch the latest Kubernetes version available on Civo
+  command: >
+    civo kubernetes versions | grep -oP '^ *\K[0-9]+\.[0-9]+\.[0-9]+' | head -n 1
+  register: latest_version
+  when: state == "present"
+
+- name: Upgrade Kubernetes cluster on Civo to the latest version
+  command: >
+    civo kubernetes upgrade {{ cluster_name }} --version={{ latest_version.stdout }}
+  when: state == "present"
+
+- name: Delete Kubernetes cluster on Civo
+  command: civo kubernetes remove {{ cluster_name }} --yes
+  when: state == "absent"
+
+- name: Remove context from kubeconfig
+  command: kubectl config delete-context {{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"
+
+- name: Remove cluster from kubeconfig
+  command: kubectl config delete-cluster {{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"
+
+- name: Remove user from kubeconfig
+  command: kubectl config unset users.{{ cluster_name }}
+  ignore_errors: yes
+  when: state == "absent"
