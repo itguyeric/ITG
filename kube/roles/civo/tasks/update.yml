@@ -1,0 +1,57 @@
+# roles/civo/tasks/update.yml
+---
+- name: Get current Kubernetes cluster information
+  command: >
+    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: do_k8s_info
+  failed_when: do_k8s_info.rc != 0
+  changed_when: false
+
+- name: Get the latest Kubernetes versions using Civo CLI
+  command: >
+    civo kubernetes versions --region {{ region }} --output json
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: civo_k8s_versions
+  changed_when: false
+
+- name: Ensure the list of available versions is not empty
+  assert:
+    that:
+      - civo_k8s_versions.stdout | from_json | length > 0
+    fail_msg: "No available Kubernetes versions found from Civo."
+
+- name: Parse the latest version from available versions
+  set_fact:
+    latest_version: "{{ (civo_k8s_versions.stdout | from_json) | selectattr('default', 'defined') | map(attribute='version') | sort | last }}"
+
+- name: Ensure the selected version is newer than the current version
+  assert:
+    that:
+      - latest_version is version(do_k8s_info.stdout | from_json | json_query('version'), '>')
+    fail_msg: "The latest version {{ latest_version }} is not newer than the current version."
+  when: do_k8s_info.stdout | from_json | json_query('version') != latest_version
+
+- name: Trigger update for Civo Kubernetes cluster
+  command: >
+    civo kubernetes upgrade {{ cluster_name }} --version {{ latest_version }}
+  when: do_k8s_info.stdout | from_json | json_query('version') != latest_version
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: upgrade_result
+  failed_when: upgrade_result.rc != 0
+  changed_when: true
+
+- name: Wait for Civo Kubernetes cluster to become active after upgrade
+  retries: 30  # Adjust based on your expected upgrade time
+  delay: 30    # Wait 30 seconds between retries
+  command: >
+    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: civo_k8s_status
+  until: (civo_k8s_status.stdout | from_json).status == "ACTIVE"
+  failed_when: civo_k8s_status.rc != 0
+  changed_when: false

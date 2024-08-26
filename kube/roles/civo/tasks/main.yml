@@ -1,17 +1,46 @@
 # roles/civo/tasks/main.yml
 ---
+- name: Initialize cluster_exists to false
+  set_fact:
+    cluster_exists: false
+
+- name: Check if the Civo Kubernetes cluster already exists
+  command: >
+    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: civo_k8s_check
+  failed_when: false  # Don't fail the task even if the cluster is not found
+  changed_when: false
+
+- name: Set cluster_exists to true if the cluster is found
+  set_fact:
+    cluster_exists: true
+  when: civo_k8s_check.rc == 0 and 'ZeroMatchesError' not in civo_k8s_check.stderr
+
 - name: Provision Civo Kubernetes cluster
-  community.general.civo_kubernetes_cluster:
-    state: present
-    name: "{{ cluster_name }}"
-    num_nodes: "{{ num_nodes }}"
-    size: "{{ node_size }}"
-    region: "{{ region }}"
-    api_key: "{{ civo_token }}"
+  command: >
+    civo kubernetes create {{ cluster_name }}
+    --region {{ region }}
+    --nodes {{ num_nodes }}
+    --size {{ node_size }}
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  when: not cluster_exists
   register: civo_k8s_cluster
+
+- name: Wait for Civo Kubernetes cluster to become active
+  command: >
+    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
+  register: civo_k8s_status
+  until: (civo_k8s_status.stdout | from_json).status == 'ACTIVE'
+  retries: 20
+  delay: 30
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
 
 - name: Configure kubectl to use the cluster
   command: >
-    civo kubernetes config "{{ cluster_name }}" --save
+    civo kubernetes config {{ cluster_name }} --save --local-path "{{ kubeconfig_path | default('~/.kube/config') }}"
   environment:
     CIVO_API_KEY: "{{ civo_token }}"

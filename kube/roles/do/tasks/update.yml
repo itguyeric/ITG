@@ -1,0 +1,38 @@
+# roles/do/tasks/update.yml
+---
+- name: Get current Kubernetes cluster information
+  community.digitalocean.digital_ocean_kubernetes_info:
+    name: "{{ cluster_name }}"
+    oauth_token: "{{ do_token }}"
+  register: do_k8s_info
+
+- name: Get the latest Kubernetes version using doctl
+  command: >
+    doctl kubernetes options versions --output json
+  register: doctl_k8s_versions
+  changed_when: false
+
+- name: Set the latest Kubernetes version
+  set_fact:
+    latest_version: "{{ (doctl_k8s_versions.stdout | from_json)[0]['slug'] }}"
+
+- name: Update DigitalOcean Kubernetes cluster to the latest version
+  community.digitalocean.digital_ocean_kubernetes:
+    name: "{{ cluster_name }}"
+    region: "{{ region }}"
+    version: "{{ latest_version }}"
+    node_pools:
+      - name: "default-pool"
+        size: "{{ node_size }}"
+        count: "{{ num_nodes }}"
+    oauth_token: "{{ do_token }}"
+    state: present
+  when: do_k8s_info.data.version != latest_version
+  register: do_k8s_update
+
+- name: Reconfigure kubectl with updated cluster
+  command: >
+    doctl kubernetes cluster kubeconfig save "{{ cluster_name }}"
+  environment:
+    DO_API_TOKEN: "{{ do_token }}"
+  when: do_k8s_update.changed

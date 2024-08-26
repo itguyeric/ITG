@@ -17,17 +17,17 @@
       include_role:
         name: "{{ cloud_provider }}"
 
-    - name: Create itguyeric namespace
-      include_role:
-        name: kubernetes
-
-    - name: Run the namespace creation tasks
-      include_tasks: "../roles/kubernetes/tasks/itguyeric.yml"
-
     - name: Update the Kubernetes cluster to the latest version
       include_role:
         name: "{{ cloud_provider }}"
 
     - name: Run the update tasks
       include_tasks: "../roles/{{ cloud_provider }}/tasks/update.yml"
+
+    - name: Create itguyeric namespace
+      include_role:
+        name: kubernetes
+
+    - name: Run the namespace creation tasks
+      include_tasks: "../roles/kubernetes/tasks/itguyeric.yml"
 

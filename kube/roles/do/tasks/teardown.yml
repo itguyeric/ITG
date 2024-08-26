@@ -1,7 +1,29 @@
 # roles/do/tasks/teardown.yml
 ---
-- name: Delete DigitalOcean Kubernetes cluster
-  community.digitalocean.digital_ocean_kubernetes_cluster:
+- name: Get current Kubernetes cluster information
+  community.digitalocean.digital_ocean_kubernetes_info:
     name: "{{ cluster_name }}"
-    token: "{{ do_token }}"
+    oauth_token: "{{ do_token }}"
+  register: do_k8s_info
+
+- name: Fail if the Kubernetes cluster does not exist
+  fail:
+    msg: "The Kubernetes cluster {{ cluster_name }} does not exist or cannot be found."
+  when: do_k8s_info.data is undefined
+
+- name: Delete DigitalOcean Kubernetes cluster
+  community.digitalocean.digital_ocean_kubernetes:
+    name: "{{ cluster_name }}"
+    region: "{{ region }}"
+    oauth_token: "{{ do_token }}"
     state: absent
+  when: do_k8s_info.data is defined
+  register: do_k8s_delete
+
+- name: Remove kubectl configuration for the cluster (ignore errors)
+  command: >
+    doctl kubernetes cluster kubeconfig remove "{{ cluster_name }}"
+  environment:
+    DO_API_TOKEN: "{{ do_token }}"
+  ignore_errors: yes  # Ignore the error if the cluster config is already gone
+  when: do_k8s_delete.changed

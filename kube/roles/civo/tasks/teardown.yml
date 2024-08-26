@@ -1,17 +1,30 @@
-# playbooks/teardown.yml
+# roles/civo/tasks/teardown.yml
 ---
-- name: Teardown the Kubernetes cluster
-  hosts: localhost
-  gather_facts: no
+- name: Check if the Civo Kubernetes cluster exists
+  command: >
+    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  register: civo_cluster_check
+  failed_when: false
+  changed_when: false
 
-  vars_prompt:
-    - name: "cloud_provider"
-      prompt: "Choose cloud provider to teardown (do, civo, gcp)"
-      private: no
+- name: Set a flag if the cluster exists
+  set_fact:
+    cluster_exists: "{{ civo_cluster_check.rc == 0 }}"
+  when: "'no' not in civo_cluster_check.stderr"
 
-  tasks:
-    - name: Include provider-specific variables
-      include_vars: "../vars/{{ cloud_provider }}.yml"
+- name: Delete Civo Kubernetes cluster
+  command: >
+    civo kubernetes remove {{ cluster_name }} --region {{ region }} --yes
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  when: cluster_exists is defined and cluster_exists
+  ignore_errors: yes
 
-    - name: Run the teardown tasks
-      include_tasks: "../roles/{{ cloud_provider }}/tasks/teardown.yml"
+- name: Remove kubectl configuration for the cluster (ignore errors)
+  command: >
+    civo kubernetes config remove {{ cluster_name }}
+  environment:
+    CIVO_API_KEY: "{{ civo_token }}"
+  ignore_errors: yes
