@@ -120,4 +120,9 @@ main() {
   fi
 
   # Switch to the Civo context
-  kubectl config use-context $(kubectl config​⬤
+  kubectl config use-context $(kubectl config get-contexts -o name | grep civo)
+
+  calculate_runtime  # Calculate and display the runtime at the end
+}
+
+main $1
