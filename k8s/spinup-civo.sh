@@ -21,7 +21,7 @@ if [ -z "$HELM_CMD" ]; then
   exit 1
 fi
 
-CLUSTER=${CLUSTER:-civo-k8s-dev01}
+CLUSTER=${CLUSTER:-civo-kube-dev01}
 NAMESPACE=${NAMESPACE:-itguyeric}
 YAML_DIR=${YAML_DIR:-$(pwd)/helm}
 
