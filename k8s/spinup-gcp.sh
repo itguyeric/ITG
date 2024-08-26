@@ -102,13 +102,19 @@ apply_kubernetes_resources() {
 }
 
 delete_cluster() {
-  echo "Deleting Kubernetes cluster..."
+  echo "Deleting Kubernetes cluster on GCP..."
   $GCLOUD_CMD container clusters delete $CLUSTER --zone $ZONE --quiet
   if [ $? -ne 0 ]; then
     echo "Cluster deletion failed."
     exit 1
   fi
   echo "Cluster deleted successfully."
+
+  # Remove the context, cluster, and user from the kubeconfig
+  kubectl config delete-context $CLUSTER
+  kubectl config delete-cluster $CLUSTER
+  kubectl config unset users.$CLUSTER
+  echo "Removed $CLUSTER configuration from ~/.kube/config"
 }
 
 main() {
