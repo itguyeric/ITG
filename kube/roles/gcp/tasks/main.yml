@@ -1,43 +1,30 @@
----
-- name: Create Kubernetes cluster on GCP
-  command: gcloud container clusters create {{ cluster_name }} --zone {{ zone }} --num-nodes {{ num_nodes }}
-  when: state == "present"
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
 
-- name: Get Kubernetes credentials for GCP
-  command: gcloud container clusters get-credentials {{ cluster_name }} --zone {{ zone }}
-  when: state == "present"
+  tasks:
+    - name: Ensure Kubernetes cluster exists on GCP
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        initial_node_count: "{{ num_nodes }}"
+        node_config:
+          disk_size_gb: "{{ disk_size }}"
+        state: present
 
-- name: Fetch the latest Kubernetes patch version within the same minor version
-  command: >
-    gcloud container get-server-config --zone {{ zone }} --format="value(validMasterVersions)" | grep $(gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --format='value(currentMasterVersion)') | head -n 1
-  register: latest_patch_version
-  when: state == "present"
+    - name: Get Kubernetes credentials for GCP
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        get_credentials: true
 
-- name: Upgrade Kubernetes master to the latest compatible version
-  command: >
-    gcloud container clusters upgrade {{ cluster_name }} --master --cluster-version {{ latest_patch_version.stdout }} --zone {{ zone }} --quiet
-  when: state == "present"
+    - name: Ensure itguyeric namespace exists
+      kubernetes.core.k8s_namespace:
+        name: itguyeric
+        state: present
+        kubeconfig: ~/.kube/config
 
-- name: Upgrade Kubernetes nodes to the latest compatible version
-  command: >
-    gcloud container clusters upgrade {{ cluster_name }} --cluster-version {{ latest_patch_version.stdout }} --zone {{ zone }} --quiet
-  when: state == "present"
-
-- name: Delete Kubernetes cluster on GCP
-  command: gcloud container clusters delete {{ cluster_name }} --zone {{ zone }} --quiet
-  when: state == "absent"
-
-- name: Remove context from kubeconfig
-  command: kubectl config delete-context {{ cluster_name }}
-  ignore_errors: yes
-  when: state == "absent"
-
-- name: Remove cluster from kubeconfig
-  command: kubectl config delete-cluster {{ cluster_name }}
-  ignore_errors: yes
-  when: state == "absent"
-
-- name: Remove user from kubeconfig
-  command: kubectl config unset users.{{ cluster_name }}
-  ignore_errors: yes
-  when: state == "absent"

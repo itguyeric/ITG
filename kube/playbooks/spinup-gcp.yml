@@ -1,9 +1,27 @@
+---
 - hosts: gcp
   vars_files:
     - ../vars/gcp.yml
-  vars:
-    state: "{{ state | default('present') }}"
-  roles:
-    - role: gcp
-    - role: deploy_itg
+
+  tasks:
+    - name: Check if the Kubernetes cluster exists
+      command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }}
+      register: cluster_exists
+      ignore_errors: true
+
+    - name: Create Kubernetes cluster on GCP
+      command: gcloud container clusters create {{ cluster_name }} --zone {{ zone }} --num-nodes {{ num_nodes }} --disk-size {{ disk_size }}
+      when: cluster_exists is failed
+
+    - name: Debug cluster creation result
+      debug:
+        msg: "Cluster creation result: {{ cluster_exists }}"
+
+    - name: Include the upgrade tasks
+      include_tasks: ../roles/gcp/tasks/upgrade-k8s.yml
+      when: cluster_exists is succeeded or cluster_exists is failed
+
+    - name: Deploy ITG Services
+      include_tasks: ../roles/gcp/tasks/deploy_itg.yml
+      when: cluster_exists is succeeded or cluster_exists is failed
 

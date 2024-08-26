@@ -1,0 +1,16 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
+    - kubernetes.core
+
+  tasks:
+    - name: Ensure itguyeric namespace exists
+      kubernetes.core.k8s_namespace:
+        name: itguyeric
+        state: present
+        kubeconfig: ~/.kube/config
+
+    # Add more tasks related to your IT setup here, such as Helm deployments or other Kubernetes resources
+

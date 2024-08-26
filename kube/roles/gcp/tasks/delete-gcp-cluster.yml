@@ -1,0 +1,26 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
+
+  tasks:
+    - name: Delete Kubernetes cluster on GCP
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        state: absent
+
+    - name: Remove context from kubeconfig
+      command: kubectl config delete-context {{ cluster_name }}
+      ignore_errors: yes
+
+    - name: Remove cluster from kubeconfig
+      command: kubectl config delete-cluster {{ cluster_name }}
+      ignore_errors: yes
+
+    - name: Remove user from kubeconfig
+      command: kubectl config unset users.{{ cluster_name }}
+      ignore_errors: yes
+

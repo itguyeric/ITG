@@ -1,0 +1,23 @@
+
+- hosts: localhost
+  vars_files:
+    - ../vars/gcp.yml
+  tasks:
+    - name: Check if the Kubernetes cluster exists
+      command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }}
+      register: cluster_check
+      ignore_errors: yes
+
+    - name: Create Kubernetes cluster on GCP
+      command: gcloud container clusters create {{ cluster_name }} --zone {{ zone }} --num-nodes 3 --disk-size 10GB
+      when: cluster_check.failed
+      register: cluster_creation_result
+
+    - name: Debug cluster creation result
+      debug:
+        msg: "Cluster creation result: {{ cluster_creation_result.stdout }}"
+      when: cluster_check.failed
+
+    - name: Include the upgrade tasks
+      include_tasks: ../roles/gcp/tasks/upgrade-k8s.yml
+

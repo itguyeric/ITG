@@ -1,0 +1,36 @@
+- hosts: gcp
+  vars_files:
+    - ../vars/gcp.yml
+  collections:
+    - google.cloud
+
+  tasks:
+    - name: Fetch the current Kubernetes master version
+      command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --format=value(currentMasterVersion)
+      register: current_master_version
+
+    - name: Fetch all valid Kubernetes master versions
+      command: gcloud container get-server-config --zone {{ zone }} --format="value(validMasterVersions)"
+      register: valid_master_versions
+
+    - name: Split valid master versions into a list
+      set_fact:
+        valid_master_versions_list: "{{ valid_master_versions.stdout.split(';') }}"
+
+    - name: Find the latest patch version within the same minor version
+      set_fact:
+        latest_patch_version: "{{ valid_master_versions_list | select('search', '^' + current_master_version.stdout.split('.')[0] + '\\.' + current_master_version.stdout.split('.')[1] + '\\.') | first | default('') }}"
+
+    - name: Fail if no valid patch version is found
+      fail:
+        msg: "No valid patch version found for the current Kubernetes version {{ current_master_version.stdout }}"
+      when: latest_patch_version == ''
+
+    - name: Upgrade Kubernetes master to the latest patch version
+      command: gcloud container clusters upgrade {{ cluster_name }} --master --cluster-version {{ latest_patch_version }} --zone {{ zone }} --quiet
+      when: latest_patch_version != ''
+
+    - name: Upgrade Kubernetes nodes to the latest patch version
+      command: gcloud container clusters upgrade {{ cluster_name }} --node-pool default-pool --cluster-version {{ latest_patch_version }} --zone {{ zone }} --quiet
+      when: latest_patch_version != ''
+
