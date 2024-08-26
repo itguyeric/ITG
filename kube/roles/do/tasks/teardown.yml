@@ -20,10 +20,16 @@
   when: do_k8s_info.data is defined
   register: do_k8s_delete
 
+- name: Get current kubectl contexts
+  command: kubectl config get-contexts -o name
+  register: kubectl_contexts
+
+- name: Find the correct context for the cluster
+  set_fact:
+    kube_context: "{{ kubectl_contexts.stdout_lines | select('search', cluster_name) | list | first }}"
+  when: kubectl_contexts.stdout_lines | select('search', cluster_name) | list | length > 0
+
 - name: Remove kubectl configuration for the cluster (ignore errors)
-  command: >
-    doctl kubernetes cluster kubeconfig remove "{{ cluster_name }}"
-  environment:
-    DO_API_TOKEN: "{{ do_token }}"
-  ignore_errors: yes  # Ignore the error if the cluster config is already gone
-  when: do_k8s_delete.changed
+  command: kubectl config delete-context {{ kube_context }}
+  ignore_errors: yes
+  when: kube_context is defined

@@ -1,30 +1,27 @@
-# roles/civo/tasks/teardown.yml
 ---
-- name: Check if the Civo Kubernetes cluster exists
-  command: >
-    civo kubernetes show {{ cluster_name }} --region {{ region }} --output json
-  environment:
-    CIVO_API_KEY: "{{ civo_token }}"
-  register: civo_cluster_check
-  failed_when: false
-  changed_when: false
-
-- name: Set a flag if the cluster exists
-  set_fact:
-    cluster_exists: "{{ civo_cluster_check.rc == 0 }}"
-  when: "'no' not in civo_cluster_check.stderr"
-
 - name: Delete Civo Kubernetes cluster
   command: >
     civo kubernetes remove {{ cluster_name }} --region {{ region }} --yes
   environment:
     CIVO_API_KEY: "{{ civo_token }}"
-  when: cluster_exists is defined and cluster_exists
+  register: civo_remove_result
+  failed_when: "'sorry there is no' not in civo_remove_result.stderr"
+
+- name: Wait for the cluster deletion to complete
+  pause:
+    minutes: 2
+
+- name: Remove kubectl context for the cluster (ignore errors)
+  command: >
+    kubectl config delete-context {{ cluster_name }}
   ignore_errors: yes
 
-- name: Remove kubectl configuration for the cluster (ignore errors)
+- name: Remove kubectl cluster for the cluster (ignore errors)
   command: >
-    civo kubernetes config remove {{ cluster_name }}
-  environment:
-    CIVO_API_KEY: "{{ civo_token }}"
+    kubectl config delete-cluster {{ cluster_name }}
+  ignore_errors: yes
+
+- name: Remove kubectl user for the cluster (ignore errors)
+  command: >
+    kubectl config unset users.{{ cluster_name }}
   ignore_errors: yes
