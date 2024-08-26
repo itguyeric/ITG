@@ -3,7 +3,6 @@
     - ../vars/gcp.yml
   collections:
     - google.cloud
-    - kubernetes.core
 
   tasks:
     - name: Check if the Kubernetes cluster exists
@@ -26,6 +25,14 @@
               disk_size_gb: "{{ disk_size }}"
         state: present
       when: cluster_info is failed
+
+    - name: Wait for Kubernetes cluster to be fully operational
+      command: >
+        gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }} --format="value(status)"
+      register: cluster_status
+      retries: 30
+      delay: 30
+      until: cluster_status.stdout == "RUNNING"
 
     - name: Debug cluster creation result
       debug:

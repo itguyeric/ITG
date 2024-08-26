@@ -1,52 +1,29 @@
----
-# roles/gcp/tasks/upgrade-k8s.yml
-
 - name: Fetch the current Kubernetes master version
-  google.cloud.gcp_container_cluster_info:
-    name: "{{ cluster_name }}"
-    location: "{{ zone }}"
-    project: "{{ gcp_project }}"
-  register: cluster_info
-
-- name: Debug current master version
-  debug:
-    msg: "Current master version is {{ cluster_info.resources[0].currentMasterVersion }}"
+  command: gcloud container clusters describe {{ cluster_name }} --zone {{ zone }} --project {{ gcp_project }} --format="value(currentMasterVersion)"
+  register: current_master_version
 
 - name: Fetch all valid Kubernetes master versions
-  google.cloud.gcp_container_cluster_info:
-    name: "{{ cluster_name }}"
-    location: "{{ zone }}"
-    project: "{{ gcp_project }}"
+  command: gcloud container get-server-config --zone {{ zone }} --project {{ gcp_project }} --format="value(validMasterVersions)"
   register: valid_master_versions
 
 - name: Split valid master versions into a list
   set_fact:
-    valid_master_versions_list: "{{ valid_master_versions.resources[0].validMasterVersions }}"
+    valid_master_versions_list: "{{ valid_master_versions.stdout.split(';') }}"
 
 - name: Find the latest patch version within the same minor version
   set_fact:
-    latest_patch_version: "{{ valid_master_versions_list | select('search', '^' + cluster_info.resources[0].currentMasterVersion.split('.')[0] + '\\.' + cluster_info.resources[0].currentMasterVersion.split('.')[1] + '\\.') | first | default('') }}"
+    latest_patch_version: "{{ valid_master_versions_list | select('search', '^' + current_master_version.stdout.split('.')[0] + '\\.' + current_master_version.stdout.split('.')[1] + '\\.') | first | default('') }}"
 
 - name: Fail if no valid patch version is found
   fail:
-    msg: "No valid patch version found for the current Kubernetes version {{ cluster_info.resources[0].currentMasterVersion }}"
+    msg: "No valid patch version found for the current Kubernetes version {{ current_master_version.stdout }}"
   when: latest_patch_version == ''
 
 - name: Upgrade Kubernetes master to the latest patch version
-  google.cloud.gcp_container_cluster:
-    name: "{{ cluster_name }}"
-    location: "{{ zone }}"
-    project: "{{ gcp_project }}"
-    cluster_version: "{{ latest_patch_version }}"
-    update: master
+  command: gcloud container clusters upgrade {{ cluster_name }} --master --cluster-version {{ latest_patch_version }} --zone {{ zone }} --project {{ gcp_project }} --quiet
   when: latest_patch_version != ''
 
 - name: Upgrade Kubernetes nodes to the latest patch version
-  google.cloud.gcp_container_cluster:
-    name: "{{ cluster_name }}"
-    location: "{{ zone }}"
-    project: "{{ gcp_project }}"
-    cluster_version: "{{ latest_patch_version }}"
-    update: nodes
+  command: gcloud container clusters upgrade {{ cluster_name }} --node-pool default-pool --cluster-version {{ latest_patch_version }} --zone {{ zone }} --project {{ gcp_project }} --quiet
   when: latest_patch_version != ''
 

@@ -1,7 +1,17 @@
 - name: Create itguyeric namespace
-  kubernetes.core.k8s_namespace:
-    name: itguyeric
-    state: present
-  collections:
-    - kubernetes.core
+  command: kubectl create namespace itguyeric
+  register: create_namespace_output
+  ignore_errors: true
+
+- name: Verify if namespace was created successfully
+  command: kubectl get namespace itguyeric
+  register: namespace_check
+  failed_when: "'Error' in namespace_check.stderr"
+  retries: 3
+  delay: 5
+  until: namespace_check.rc == 0
+
+- name: Debug namespace creation output
+  debug:
+    msg: "Namespace creation output: {{ create_namespace_output.stdout }}"
 
