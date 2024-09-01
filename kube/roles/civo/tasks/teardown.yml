@@ -1,11 +1,14 @@
 ---
 - name: Delete Civo Kubernetes cluster
   command: >
-    civo kubernetes remove {{ cluster_name }} --region {{ region }} --yes
+    civo kubernetes remove {{ cluster_name }}
+    --region {{ region }}
+    --yes
   environment:
     CIVO_API_KEY: "{{ civo_token }}"
-  register: civo_remove_result
-  failed_when: "'sorry there is no' not in civo_remove_result.stderr"
+  register: civo_k8s_remove
+  failed_when: civo_k8s_remove.rc != 0
+  changed_when: "'has been deleted' in (civo_k8s_remove.stdout | regex_replace('\\x1b\\[[0-9;]*m', ''))"
 
 - name: Wait for the cluster deletion to complete
   pause:
@@ -25,3 +28,4 @@
   command: >
     kubectl config unset users.{{ cluster_name }}
   ignore_errors: yes
+
