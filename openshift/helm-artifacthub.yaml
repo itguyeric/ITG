@@ -1,0 +1,8 @@
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: artifacthub
+spec:
+  name: artifacthub
+  connectionConfig:
+    url: https://artifacthub.io
