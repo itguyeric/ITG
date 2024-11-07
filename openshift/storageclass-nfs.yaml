@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs
+provisioner: nfs-client-provisioner
+parameters:
+  archiveOnDelete: "false"  # Optional, keeps PVs around after deletion
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
