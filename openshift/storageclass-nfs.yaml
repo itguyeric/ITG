@@ -1,10 +1,19 @@
-apiVersion: storage.k8s.io/v1
 kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
   name: nfs
+  annotations:
+    storageclass.kubernetes.io/is-default-class: 'true'
+    cdi.kubevirt.io/clone-strategy: "copy"
+    capabilities.virtainers.openshift.io/clone-strategy: "copy"
+    capabilities.virtainers.openshift.io/access-mode: "ReadWriteMany"
 provisioner: nfs-client-provisioner
+mountOptions:
+  - vers=4.1
+  - nolock
+  - hard
 parameters:
-  archiveOnDelete: "false"  # Optional, keeps PVs around after deletion
-reclaimPolicy: Delete
+  archiveOnDelete: 'false'
 volumeBindingMode: Immediate
-
+reclaimPolicy: Delete
+allowVolumeExpansion: true

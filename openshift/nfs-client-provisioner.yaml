@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nfs-client-provisioner
-data:
-  NFS_SERVER: 192.168.1.21
-  NFS_PATH: /mnt/user/ocp
-
