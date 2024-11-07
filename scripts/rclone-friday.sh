@@ -16,6 +16,6 @@ for dir in "${SYNC_DIRS[@]}"; do
   SOURCE_PATH="${ICLOUD_BASE_DIR}/${dir}"
   
   for target in "${TARGETS[@]}"; do
-    rclone bisync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --resync --copy-links --checksum
+    /opt/homebrew/bin/rclone bisync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --resync --copy-links --checksum
   done
 done
