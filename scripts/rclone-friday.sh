@@ -17,6 +17,6 @@ for dir in "${SYNC_DIRS[@]}"; do
   
   for target in "${TARGETS[@]}"; do
     #/opt/homebrew/bin/rclone bisync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --resync --copy-links --checksum
-    /opt/homebrew/bin/rclone sync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --resync --copy-links --checksum
+    /opt/homebrew/bin/rclone sync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --copy-links --checksum
   done
 done
