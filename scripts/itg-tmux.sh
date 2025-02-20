@@ -7,16 +7,17 @@ if ! tmux has-session -t $SESSION 2>/dev/null; then
     # Start a new tmux session
     tmux new-session -d -s $SESSION
 
-    # 0:local
+    # 0: local
     tmux rename-window -t $SESSION:0 'local'
     tmux send-keys -t $SESSION:0 'clear' C-m
 
-    # 1:unraid
+    # 1: unraid
     tmux new-window -t $SESSION:1 -n 'unraid'
     tmux send-keys -t $SESSION:1 'ssh itg01' C-m 'clear' C-m
 
-    ## 2:rhel
-    #tmux new-window -t $SESSION:2 -n 'rhel'
+    # 2: itg03
+    tmux new-window -t $SESSION:2 -n 'itg03'
+    tmux send-keys -t $SESSION:2 'ssh -i ~/.ssh/id_rsa_ans ansible@itg03' C-m 'clear' C-m
     #
     ## Pane for rhel09a (top-left)
     #tmux send-keys -t $SESSION:2 'ssh -i ~/.ssh/id_rsa_ans ansible@rhel09a' C-m 'clear' C-m
