@@ -1,22 +1,63 @@
 #!/bin/bash
 
-# Define directories
-ICLOUD_BASE_DIR="/Users/ehendricks/Library/Mobile Documents/com~apple~CloudDocs"
-TARGETS=("nextcloud:" "gDrive-EH:")
-## TODO: Add in seafile
+LOGDIR="$HOME/.rclone"
+LOGFILE="$LOGDIR/icloud-sync.log"
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 
-# List of directories to sync
-SYNC_DIRS=("Desktop" "Documents" "Downloads" "Movies" "Music" "Pictures" "Public" "Support" "Templates" "Videos")
+# Create log directory if needed
+mkdir -p "$LOGDIR"
 
-## Log file location
-#LOG_FILE="/Users/ehendricks/tmp/rclone.log"
+# Clear old log
+[ -f "$LOGFILE" ] && rm "$LOGFILE"
 
-# Sync loop
-for dir in "${SYNC_DIRS[@]}"; do
-  SOURCE_PATH="${ICLOUD_BASE_DIR}/${dir}"
+echo "[$TIMESTAMP] Starting sync..." | tee -a "$LOGFILE"
+
+# 🧯 Abort if on battery power
+POWER_SOURCE=$(pmset -g batt | grep "Now drawing from" | awk '{print $4}' | tr -d '"')
+if [ "$POWER_SOURCE" == "Battery" ]; then
+  echo "[$(date "+%H:%M:%S")] ⚠️  Skipping sync: running on battery." | tee -a "$LOGFILE"
+  exit 0
+fi
+
+# 🌐 Abort if no network
+if ! ping -q -c 1 -W 2 google.com >/dev/null; then
+  echo "[$(date "+%H:%M:%S")] ⚠️  Skipping sync: no internet connection." | tee -a "$LOGFILE"
+  exit 0
+fi
+
+# Folders to sync
+FOLDERS=(
+  "Desktop"
+  "Documents"
+  "Downloads"
+  "Movies"
+  "Music"
+  "Pictures"
+  "Public"
+  "Saved from Chrome"
+  "Support"
+  "Templates"
+)
+
+for FOLDER in "${FOLDERS[@]}"; do
+  echo "[$(date "+%H:%M:%S")] Syncing $FOLDER..." | tee -a "$LOGFILE"
   
-  for target in "${TARGETS[@]}"; do
-    #/opt/homebrew/bin/rclone bisync "$SOURCE_PATH" "$target/${dir}" --log-file="$LOG_FILE" --log-level INFO --resync --copy-links --checksum
-    /opt/homebrew/bin/rclone sync "$SOURCE_PATH" "$target/${dir}" --copy-links --checksum
-  done
+  rclone sync "gdrive:$FOLDER" "icloud:$FOLDER" \
+    --create-empty-src-dirs \
+    --progress \
+    --exclude "/MindNode/**" \
+    --exclude "/Scanner By Readdle/**" \
+    --exclude "/Shortcuts/**" \
+    --exclude "/TextEdit/**" \
+    --exclude "/Preview/**" \
+    >> "$LOGFILE" 2>&1
+
+  if [ $? -eq 0 ]; then
+    echo "[$(date "+%H:%M:%S")] ✅ $FOLDER sync complete." | tee -a "$LOGFILE"
+  else
+    echo "[$(date "+%H:%M:%S")] ❌ $FOLDER sync failed!" | tee -a "$LOGFILE"
+  fi
 done
+
+echo "[$(date "+%Y-%m-%d %H:%M:%S")] ✅ All sync tasks finished." | tee -a "$LOGFILE"
+
