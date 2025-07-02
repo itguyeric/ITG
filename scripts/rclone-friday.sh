@@ -20,7 +20,7 @@ if [ "$POWER_SOURCE" == "Battery" ]; then
 fi
 
 # 🌐 Abort if no network
-if ! ping -q -c 1 -W 2 google.com >/dev/null; then
+if ! /sbin/ping -q -c 1 -W 2 google.com >/dev/null; then
   echo "[$(date "+%H:%M:%S")] ⚠️  Skipping sync: no internet connection." | tee -a "$LOGFILE"
   exit 0
 fi
