@@ -1,1 +1,26 @@
-ansible/.vault_pass
+# Ansible-generated files
+*.retry
+*.log
+*.tar.gz
+*.iso
+*.img
+*.qcow2
+
+# SSH keys or vault secrets
+*.key
+*.pem
+vault_pass.txt
+
+# Python virtualenvs
+.venv/
+__pycache__/
+*.pyc
+
+# Editor & OS junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Ansible inventory caches
+~/.ansible/

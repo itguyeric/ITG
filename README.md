@@ -1,38 +1,25 @@
-# ehq
+# ITG Infrastructure Automation
 
-- SYSCONFIG  
-  Configuration files, scripts, and instructions for setting up one of my personal systems.
+This repo contains Ansible playbooks and roles for provisioning and configuring virtual machines on **ITG02** (Dell R730 running AlmaLinux 10.0 with libvirt).
 
-  * Git  
-    Instructions and configuration files for customizing my implementation of Git
+## Features
 
-  * VIM  
-    Plugin instructions and configuration files for my personal vim useage.
+- Provision VMs from cloud images (Fedora, Alma, etc.)
+- Configure bridged networking
+- Inject SSH keys and optional Tailscale setup
+- Thin-provisioned qcow2 storage
+- Cloud-init and Ansible role-based customization
+- Designed to replace legacy Unraid workflows
 
-  * WeeChat  
-    Configurations for weechat
-    Quickstart Guide https://www.linode.com/docs/applications/messaging/using-weechat-for-irc/
-    Smart Filters:
-      - Suppress Join/Part: https://weechat.org/blog/post/2008/10/25/Smart-IRC-join-part-quit-message-filter
+## Getting Started
 
-- TUTORIAL  
-  Test directory for trying recipies and tutorial files
-# ehq
+Clone this repo on your development machine (e.g., `Friday`), then:
 
-- SYSCONFIG  
-  Configuration files, scripts, and instructions for setting up one of my personal systems.
+```bash
+# Create a Python virtual environment (optional but recommended)
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt  # (once created)
 
-  * Git  
-    Instructions and configuration files for customizing my implementation of Git
-
-  * VIM  
-    Plugin instructions and configuration files for my personal vim useage.
-
-  * WeeChat  
-    Configurations for weechat
-    Quickstart Guide https://www.linode.com/docs/applications/messaging/using-weechat-for-irc/
-    Smart Filters:
-      - Suppress Join/Part: https://weechat.org/blog/post/2008/10/25/Smart-IRC-join-part-quit-message-filter
-
-- TUTORIAL  
-  Test directory for trying recipies and tutorial files
+# Run a provisioning playbook
+ansible-playbook -i inventories/itg02 playbooks/provision.yml
