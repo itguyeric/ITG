@@ -1,0 +1,58 @@
+---
+- name: Ensure VM storage directory exists
+  file:
+    path: "{{ vm_defaults.storage_dir }}/{{ vm_name }}"
+    state: directory
+    mode: '0755'
+
+- name: Create VM disk from base image
+  command: >
+    qemu-img create -f qcow2
+    -b {{ vm_defaults.image }}
+    -F qcow2
+    {{ vm_defaults.storage_dir }}/{{ vm_name }}/{{ vm_name }}.qcow2
+    {{ vm_defaults.disk_size_gb }}G
+  args:
+    creates: "{{ vm_defaults.storage_dir }}/{{ vm_name }}/{{ vm_name }}.qcow2"
+
+- name: Create cloud-init ISO
+  become: false
+  community.general.iso_create:
+    dest_iso: "{{ vm_defaults.cloudinit_iso_dir }}/{{ vm_name }}-cidata.iso"
+    src_files:
+      - name: user-data
+        content: "{{ lookup('template', playbook_dir + '/../templates/user-data.j2', convert_data=False) }}"
+      - name: meta-data
+        content: "instance-id: {{ vm_name }}\nlocal-hostname: {{ vm_name }}\n"
+    vol_ident: cidata
+  run_once: true
+  delegate_to: localhost
+
+- name: Define and start the VM
+  community.libvirt.virt:
+    name: "{{ vm_name }}"
+    state: running
+    autostart: "{{ vm_defaults.autostart }}"
+    os_type: linux
+    arch: x86_64
+    memory: "{{ vm_defaults.memory_mb }}"
+    vcpus: "{{ vm_defaults.vcpus }}"
+    disks:
+      - name: vda
+        type: disk
+        device: disk
+        driver_name: qemu
+        source: "{{ vm_defaults.storage_dir }}/{{ vm_name }}/{{ vm_name }}.qcow2"
+        size: "{{ vm_defaults.disk_size_gb }}"
+      - name: cidata
+        type: cdrom
+        device: cdrom
+        driver_name: qemu
+        source: "{{ vm_defaults.cloudinit_iso_dir }}/{{ vm_name }}-cidata.iso"
+    networks:
+      - network: "{{ vm_defaults.bridge }}"
+        type: bridge
+    boot:
+      devices:
+        - cdrom
+        - hd

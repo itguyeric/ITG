@@ -1,0 +1,9 @@
+---
+- name: Provision a Fedora cloud-init VM on ITG02
+  hosts: libvirt
+  gather_facts: false
+  become: true
+  vars:
+    vm_name: test-fedora42
+  roles:
+    - role: provision_vm

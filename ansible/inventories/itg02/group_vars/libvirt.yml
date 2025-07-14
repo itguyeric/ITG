@@ -1,0 +1,13 @@
+vm_defaults:
+  name_prefix: "itg-"
+  memory_mb: 4096
+  vcpus: 2
+  disk_size_gb: 32
+  autostart: false
+  bridge: br0
+  image: /var/lib/libvirt/images/base/fedora42-cloud.qcow2
+  cloudinit_iso_dir: /var/lib/libvirt/images/cloudinit
+  storage_dir: /var/lib/libvirt/images/vms
+  ssh_user: fedora
+  ssh_key_path: ~/.ssh/id_rsa_ans.pub
+  tailscale_enabled: false

@@ -1,0 +1,9 @@
+#cloud-config
+hostname: {{ vm_name }}
+users:
+  - name: {{ vm_defaults.ssh_user }}
+    ssh_authorized_keys:
+      - "{{ lookup('file', vm_defaults.ssh_key_path) }}"
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    shell: /bin/bash
+disable_root: true
