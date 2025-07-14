@@ -1,22 +1,13 @@
 {
 	"folders": [
 		{
+			"path": "../../faithful-focus"
+		},
+		{
 			"path": ".."
-		},
-		{
-			"path": "../../certified-kubernetes-administrator-course"
-		},
-		{
-			"path": "../../demo-magic"
-		},
-		{
-			"path": "../../helm-labs"
-		},
-		{
-			"path": "../../../Library/CloudStorage/GoogleDrive-eric@itguyeric.com/My Drive/Fedora Podcast"
-		},
-		{
-			"path": "../../fedora-podcast"
 		}
-	]
+	],
+	"settings": {
+		"ansible.python.interpreterPath": "/opt/homebrew/bin/python3"
+	}
 }

@@ -1,0 +1,2 @@
+[libvirt]
+itg02 ansible_host=itg02.home.itguyeric.com ansible_user=ansible
