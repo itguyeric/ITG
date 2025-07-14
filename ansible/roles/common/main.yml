@@ -1,5 +1,0 @@
-----
-  - name: register with Red Hat Access
-    import_tasks: tasks/init_rhel.yml
-
-  - name: a

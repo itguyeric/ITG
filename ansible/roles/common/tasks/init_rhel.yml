@@ -1,7 +1,0 @@
----
-- name: registered with Red Hat Access
-  when: ansible+facts['distribution'] == "RedHat"
-  redhat_subscription:
-    state: present
-    org_id: '12919288'
-    activationkey: itg2022H2

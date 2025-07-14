@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin"
 
 LOGDIR="$HOME/.rclone"
 LOGFILE="$LOGDIR/icloud-sync.log"
