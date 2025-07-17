@@ -40,6 +40,8 @@ FOLDERS=(
   "Templates"
 )
 
+ANY_FAILURE=0
+
 for FOLDER in "${FOLDERS[@]}"; do
   echo "[$(date "+%H:%M:%S")] Syncing $FOLDER..." | tee -a "$LOGFILE"
   
@@ -57,8 +59,14 @@ for FOLDER in "${FOLDERS[@]}"; do
     echo "[$(date "+%H:%M:%S")] ✅ $FOLDER sync complete." | tee -a "$LOGFILE"
   else
     echo "[$(date "+%H:%M:%S")] ❌ $FOLDER sync failed!" | tee -a "$LOGFILE"
+    ANY_FAILURE=1
   fi
 done
 
-echo "[$(date "+%Y-%m-%d %H:%M:%S")] ✅ All sync tasks finished." | tee -a "$LOGFILE"
+if [ "$ANY_FAILURE" -eq 0 ]; then
+  echo "[$(date "+%Y-%m-%d %H:%M:%S")] ✅ All sync tasks finished successfully." | tee -a "$LOGFILE"
+else
+  echo "[$(date "+%Y-%m-%d %H:%M:%S")] ❌ One or more sync tasks failed!" | tee -a "$LOGFILE" >&2
+  exit 1
+fi
 
