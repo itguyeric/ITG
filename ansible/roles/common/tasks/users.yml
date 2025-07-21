@@ -1,0 +1,12 @@
+---
+- name: Create users group
+  group:
+    name: "{{ MYUSER }}"
+    gid: 2000
+    state: present
+
+- name: Create user
+  user:
+    append: yes
+    name: "{{ MYUSER }}"
+    

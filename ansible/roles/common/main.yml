@@ -1,0 +1,8 @@
+---
+- hosts: servers
+  become: yes
+  gather_facts: yes
+  tasks:
+
+    - name: create users
+      import_tasks: tasks/users.yml

@@ -5,6 +5,12 @@
 		},
 		{
 			"path": ".."
+		},
+		{
+			"path": "../ansible"
+		},
+		{
+			"path": "../archive/ansible"
 		}
 	],
 	"settings": {
