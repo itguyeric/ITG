@@ -34,11 +34,11 @@ clear
 
 # put your demo awesomeness here
 
-pei "cat /etc/almalinux-release"
+pe "cat /etc/almalinux-release"
 
 pei "curl -s -L https://kernelcare.com/installer | sudo bash"
 
-pei "clear"
+pe "clear"
 
 pei "uname -r"
 
@@ -46,9 +46,9 @@ pei "sudo kcarectl --info"
 
 pei "sudo kcarectl --update"
 
-pe "clear"
-
 pei "uname -r"
+
+pe "clear"
 
 pe "sudo kcarectl --patch-info"
 
