@@ -34,23 +34,23 @@ clear
 
 # put your demo awesomeness here
 
-pe "cat /etc/almalinux-release"
+pei "cat /etc/almalinux-release"
 
-pei "curl -s -L https://kernelcare.com/installer | sudo bash"
+pe "curl -s -L https://kernelcare.com/installer | sudo bash"
 
-pe "clear"
+pei "clear"
 
 pei "uname -r"
 
-pei "sudo kcarectl --info"
+pe "sudo kcarectl --info"
 
-pei "sudo kcarectl --patch-info"
+pe "sudo kcarectl --update"
 
-pei "sudo kcarectl --update"
+pei "uname -r"
 
 pe "clear"
 
-pei "kcarectl --patch-info"
+pe "sudo kcarectl --patch-info"
 
 # show a prompt so as not to reveal our true nature after
 # the demo has concluded
