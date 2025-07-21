@@ -34,21 +34,17 @@ clear
 
 # put your demo awesomeness here
 
-pei "cat /etc/almalinux-release"
+pe "cat /etc/almalinux-release"
 
-pei curl -s -L https://kernelcare.com/installer | sudo bash
-
-pe "clear"
-
-pei sudo kcarectl --info
-
-pei sudo kcarectl --register 123456-1234-5678 2> /dev/null
-# hidden server change
-sudo kcarectl --register 47044768-0917-4f63-9585-62f7959c1328
+pei "curl -s -L https://kernelcare.com/installer | sudo bash"
 
 pe "clear"
 
 pei "uname -r"
+
+pei "sudo kcarectl --info"
+
+pei "sudo kcarectl --patch-info"
 
 pei "sudo kcarectl --update"
 
