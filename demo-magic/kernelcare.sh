@@ -28,7 +28,6 @@
 # setup
 
 echo "Configuring demo..."
-sudo dnf install -y tar
 
 # hide the evidence
 clear
