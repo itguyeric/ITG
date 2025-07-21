@@ -28,6 +28,7 @@
 # setup
 
 echo "Configuring demo..."
+sudo dnf install -y tar
 
 # hide the evidence
 clear
@@ -36,19 +37,19 @@ clear
 
 pei "cat /etc/almalinux-release"
 
-pe "curl -s -L https://kernelcare.com/installer | sudo bash"
+pei "curl -s -L https://kernelcare.com/installer | sudo bash"
 
 pei "clear"
 
 pei "uname -r"
 
-pe "sudo kcarectl --info"
+pei "sudo kcarectl --info"
 
-pe "sudo kcarectl --update"
-
-pei "uname -r"
+pei "sudo kcarectl --update"
 
 pe "clear"
+
+pei "uname -r"
 
 pe "sudo kcarectl --patch-info"
 
