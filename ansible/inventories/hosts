@@ -1,0 +1,14 @@
+[builders]
+
+[hypervisors]
+itg02
+itg03
+
+[laptops]
+friday
+ultron
+
+[mac]
+friday
+
+[servers]

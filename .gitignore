@@ -9,7 +9,7 @@
 # SSH keys or vault secrets
 *.key
 *.pem
-vault_pass.txt
+.vault_pass
 
 # Python virtualenvs
 .venv/

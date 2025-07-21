@@ -1,0 +1,4 @@
+---
+ansible_connection: local
+ansible_user: itguyeric
+ansible_become: false

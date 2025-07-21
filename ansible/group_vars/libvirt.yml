@@ -1,3 +1,4 @@
+---
 vm_defaults:
   name_prefix: "itg-"
   memory_mb: 4096
@@ -11,3 +12,4 @@ vm_defaults:
   ssh_user: fedora
   ssh_key_path: ~/.ssh/id_rsa_ans.pub
   tailscale_enabled: false
+  
