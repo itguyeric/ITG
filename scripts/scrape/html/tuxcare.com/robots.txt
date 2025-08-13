@@ -1,0 +1,26 @@
+# Block specific bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Dotbot
+Disallow: /
+
+# Rules for all other bots
+User-agent: *
+Disallow: /?*refinementList
+Disallow: /?*sortBy
+
+# Sitemap
+Sitemap: https://tuxcare.com/sitemap_index.xml
