@@ -36,9 +36,9 @@ clear
 
 # put your demo awesomeness here
 
-pei "cat /etc/almalinux-release"
+pe "cat /etc/almalinux-release"
 
-pei "printf '[tuxcare-radar]\nname=TuxCare Radar\nbaseurl=https://repo.tuxcare.com/radar/\$releasever/\$basearch/\nenabled=1\ngpgcheck=1\nskip_if_unavailable=1\ngpgkey=https://repo.tuxcare.com/radar/RPM-GPG-KEY-TuxCare\n' | sudo tee /etc/yum.repos.d/tuxcare-radar.repo"
+pe "printf '[tuxcare-radar]\nname=TuxCare Radar\nbaseurl=https://repo.tuxcare.com/radar/\$releasever/\$basearch/\nenabled=1\ngpgcheck=1\nskip_if_unavailable=1\ngpgkey=https://repo.tuxcare.com/radar/RPM-GPG-KEY-TuxCare\n' | sudo tee /etc/yum.repos.d/tuxcare-radar.repo"
 
 pe "sudo dnf install -y tuxcare-radar"
 
@@ -47,11 +47,11 @@ pe "clear"
 # hidden server change
 sudo sed -i 's|https://radar.tuxcare.com|https://eu.radar.tuxcare.com|' /etc/tuxcare-radar/radar.yaml
 
-pei "sudo sed -i 's/apikey:.*/apikey: 123456-1234-5678/' /etc/tuxcare-radar/radar.yaml"
+pe "sudo sed -i 's/apikey:.*/apikey: 123456-1234-5678/' /etc/tuxcare-radar/radar.yaml"
 # -- internal config override (not shown to audience)
 sudo sed -i 's/apikey:.*/apikey: 47044768-0917-4f63-9585-62f7959c1328/' /etc/tuxcare-radar/radar.yaml
 
-pei "sudo su -s /bin/bash nobody -c 'tuxcare-radar --config /etc/tuxcare-radar/radar.yaml'"
+pe "sudo su -s /bin/bash nobody -c 'tuxcare-radar --config /etc/tuxcare-radar/radar.yaml'"
 
 # show a prompt so as not to reveal our true nature after
 # the demo has concluded
