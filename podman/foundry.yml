@@ -1,12 +1,7 @@
-# Save the output of this file and use kubectl create -f to import
-# it into Kubernetes.
-#
-# Created with podman-4.2.0
 apiVersion: v1
 kind: Pod
 metadata:
   annotations:
-    bind-mount-options:/var/lib/containers/foundry: Z
     io.containers.autoupdate/vtt: registry
     io.kubernetes.cri-o.ContainerType/vtt: container
     io.kubernetes.cri-o.SandboxID/vtt: 7b63b0d81a71b4788f119beb01b404dd5ff01a745e1a69938a57f13e4999eea
@@ -57,10 +52,10 @@ spec:
     - mountPath: /data
       name: var-lib-containers-foundry-host-0
   hostname: foundry
-  
   volumes:
   - hostPath:
       path: /var/lib/containers/foundry
       type: Directory
     name: var-lib-containers-foundry-host-0
 status: {}
+
