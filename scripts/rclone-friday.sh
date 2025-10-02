@@ -45,15 +45,13 @@ ANY_FAILURE=0
 for FOLDER in "${FOLDERS[@]}"; do
   echo "[$(date "+%H:%M:%S")] Syncing $FOLDER..." | tee -a "$LOGFILE"
   
-  rclone sync "gdrive:$FOLDER" "icloud:$FOLDER" \
-    --create-empty-src-dirs \
-    --progress \
-    --exclude "/MindNode/**" \
-    --exclude "/Scanner By Readdle/**" \
-    --exclude "/Shortcuts/**" \
-    --exclude "/TextEdit/**" \
-    --exclude "/Preview/**" \
-    >> "$LOGFILE" 2>&1
+  SRC="$HOME/$FOLDER"
+  DEST="$HOME/Library/Mobile Documents/com~apple~CloudDocs/$FOLDER"
+
+  mkdir -p "$SRC"
+  mkdir -p "$DEST"
+
+  rsync -av --delete "$SRC/" "$DEST/" >> "$LOGFILE" 2>&1
 
   if [ $? -eq 0 ]; then
     echo "[$(date "+%H:%M:%S")] ✅ $FOLDER sync complete." | tee -a "$LOGFILE"
@@ -69,4 +67,3 @@ else
   echo "[$(date "+%Y-%m-%d %H:%M:%S")] ❌ One or more sync tasks failed!" | tee -a "$LOGFILE" >&2
   exit 1
 fi
-
