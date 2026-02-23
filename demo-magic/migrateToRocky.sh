@@ -47,13 +47,15 @@ clear
 
 pei "cat /etc/redhat-release"
 
-pe "sudo subscription-manager status"
+wait
+
+pei "sudo subscription-manager status"
 
 pei "ls -lh /etc/yum.repos.d"
 
 pe "clear"
 
-pei "fips-mode-setup --check"
+pe "fips-mode-setup --check"
 
 pei "rpm -qa"
 
