@@ -25,32 +25,31 @@
 # text color
 # DEMO_CMD_COLOR=$BLACK
 
-# setup
-
-echo "Configuring demo..."
-
 # hide the evidence
 clear
 
+
 # put your demo awesomeness here
 
-pe "cat /etc/almalinux-release"
+pei "cat /etc/*-release"
 
-pei "curl -s -L https://kernelcare.com/installer | sudo bash"
+pe "curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release https://www.redhat.com/security/data/fd431d51.txt"
 
-pe "clear"
+pe "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem"
 
-pei "uname -r"
-
-pei "sudo kcarectl --info"
-
-pei "sudo kcarectl --update"
-
-pei "uname -r"
+pe "curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo"
 
 pe "clear"
 
-pe "sudo kcarectl --patch-info"
+pe "yum repolist"
+
+pe "yum install -y convert2rhel"
+
+pe "clear"
+
+pe "convert2rhel --org 12919288 --activationkey convert2rhel -y"
+
+pe "reboot"
 
 # show a prompt so as not to reveal our true nature after
 # the demo has concluded
