@@ -45,9 +45,9 @@ clear
 
 # put your demo awesomeness here
 
-pe "cat /etc/redhat-release"
+pei "cat /etc/redhat-release"
 
-pei "sudo subscription-manager status"
+pe "sudo subscription-manager status"
 
 pei "ls -lh /etc/yum.repos.d"
 
