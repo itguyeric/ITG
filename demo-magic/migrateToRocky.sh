@@ -33,15 +33,15 @@ clear
 
 pei "cat /etc/redhat-release"
 
-pe "sudo subscription-manager status"
+pei "sudo subscription-manager status"
 
-pe "ls -lh /etc/yum.repos.d"
+pei "ls -lh /etc/yum.repos.d"
 
 pe "clear"
 
-pe "fips-mode-setup --check"
+pei "fips-mode-setup --check"
 
-pe "rpm -qa"
+pei "rpm -qa"
 
 pe "clear"
 
@@ -55,7 +55,7 @@ pe "chmod +x migrate2rocky9.sh"
 
 pei "sudo ./migrate2rocky9.sh -r"
 
-pei "sudo reboot"
+pe "sudo reboot"
 
 
 # show a prompt so as not to reveal our true nature after

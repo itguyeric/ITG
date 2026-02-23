@@ -42,7 +42,7 @@ pei "sudo depot enable rlc-9"
 
 pe "clear"
 
-pe "sudo dnf repolist enabled"
+pei "sudo dnf repolist enabled"
 
 pei "sudo dnf update -y"
 
@@ -50,15 +50,15 @@ pe "clear"
 
 pei "cat /etc/rocky-release"
 
-pe "sudo dnf repolist enabled |grep -i ciq"
+pei "sudo dnf repolist enabled |grep -i ciq"
 
-pe "sudo dnf check"
+pei "sudo dnf check"
 
-pe "uname -r"
+pei "uname -r"
 
-pei "clear"
+pe "clear"
 
-pe "sudo systemctl list-units --type=service --state=running"
+pei "sudo systemctl list-units --type=service --state=running"
 
 # show a prompt so as not to reveal our true nature after
 # the demo has concluded
