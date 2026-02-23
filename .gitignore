@@ -24,3 +24,6 @@ __pycache__/
 
 # Ansible inventory caches
 ~/.ansible/
+
+# demo magic
+~/git/itg/demo-magic/migrate2rocky9.sh
