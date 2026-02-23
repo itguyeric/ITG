@@ -55,9 +55,9 @@ pei "ls -lh /etc/yum.repos.d"
 
 pe "clear"
 
-pe "fips-mode-setup --check"
+pei "fips-mode-setup --check"
 
-pei "rpm -qa"
+pe "rpm -qa"
 
 pe "clear"
 
