@@ -31,25 +31,32 @@ clear
 
 # put your demo awesomeness here
 
-pei "cat /etc/*-release"
+pei "cat /etc/redhat-release"
 
-pe "curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release https://www.redhat.com/security/data/fd431d51.txt"
+pe "sudo subscription-manager status"
 
-pe "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem"
-
-pe "curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo"
+pe "ls -lh /etc/yum.repos.d"
 
 pe "clear"
 
-pe "yum repolist"
+pe "fips-mode-setup --check"
 
-pe "yum install -y convert2rhel"
+pe "rpm -qa"
 
 pe "clear"
 
-pe "convert2rhel --org 12919288 --activationkey convert2rhel -y"
+pei "systemctl list-units --type=service --state=running"
 
-pe "reboot"
+pe "clear"
+
+pei "curl -O https://raw.githubusercontent.com/rocky-linux/rocky-tools/main/migrate2rocky/migrate2rocky9.sh"
+
+pe "chmod +x migrate2rocky9.sh"
+
+pei "sudo ./migrate2rocky9.sh -r"
+
+pei "sudo reboot"
+
 
 # show a prompt so as not to reveal our true nature after
 # the demo has concluded
