@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+#######################
+# Check for demo-magic dependency (pv)
+########################
+if ! command -v pv &>/dev/null; then
+    echo "pv not found. Running demo-magic installer..."
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [[ -f "$SCRIPT_DIR/_install-demoMagic.sh" ]]; then
+        bash "$SCRIPT_DIR/_install-demoMagic.sh"
+    else
+        echo "ERROR: _install-demoMagic.sh not found in $SCRIPT_DIR"
+        exit 1
+    fi
+fi#
+
 ########################
 # include the magic
 ########################
