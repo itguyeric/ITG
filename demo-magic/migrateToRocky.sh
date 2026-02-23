@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#######################
+########################
 # Check for demo-magic dependency (pv)
 ########################
 if ! command -v pv &>/dev/null; then
@@ -12,7 +12,7 @@ if ! command -v pv &>/dev/null; then
         echo "ERROR: _install-demoMagic.sh not found in $SCRIPT_DIR"
         exit 1
     fi
-fi#
+fi
 
 ########################
 # include the magic
@@ -45,7 +45,7 @@ clear
 
 # put your demo awesomeness here
 
-pei "cat /etc/redhat-release"
+pe "cat /etc/redhat-release"
 
 pei "sudo subscription-manager status"
 
