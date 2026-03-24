@@ -67,9 +67,9 @@ pe "clear"
 
 pei "curl -O https://raw.githubusercontent.com/rocky-linux/rocky-tools/main/migrate2rocky/migrate2rocky9.sh"
 
-pe "chmod +x migrate2rocky9.sh"
+pe "chmod +x migrate2rlc.sh"
 
-pei "sudo ./migrate2rocky9.sh -r"
+pei "sudo ./migrate2rlc.sh -r -u YOUR_USERNAME -p YOUR_TOKEN -t rlc-pro"
 
 pe "sudo reboot"
 
