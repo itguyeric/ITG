@@ -46,6 +46,7 @@ clear
 # put your demo awesomeness here
 
 pei "cat /etc/rocky-release"
+wait
 
 pei "sudo dnf repolist enabled | grep -i ciq"
 
