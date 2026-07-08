@@ -1,0 +1,3 @@
+FROM quay.io/fedora/fedora-bootc:latest
+
+Run dnf install -y vim-enhanced && dnf update -y && dnf clean all
