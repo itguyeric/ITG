@@ -1,3 +1,27 @@
 FROM quay.io/fedora/fedora-bootc:latest
+Maintainer eric@itguyeric.com
 
-Run dnf install -y vim-enhanced && dnf update -y && dnf clean all
+# --- USERS ---
+RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash ansible && \
+    groupadd -g 1001 itguyeric && useradd -u 1001 -g 1001 -G wheel -m -s /bin/bash itguyeric && \
+    groupadd -g 2000 worker && useradd -u 2000 -g 2000 -m -s /bin/bash worker
+
+RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel-nopasswd && \
+    chmod 440 /etc/sudoers.d/wheel-nopasswd
+
+RUN mkdir -p /home/ansible/.ssh /home/itguyeric/.ssh
+
+COPY --chown=ansible:ansible ansible/roles/common/files/id_rsa_ans.pub /home/ansible/.ssh/authorized_keys
+COPY --chown=itguyeric:itguyeric ansible/roles/common/files/id_rsa_itg.pub /home/itguyeric/.ssh/authorized_keys
+
+RUN chmod 700 /home/ansible/.ssh /home/itguyeric/.ssh && \
+    chmod 600 /home/ansible/.ssh/authorized_keys /home/itguyeric/.ssh/authorized_keys
+
+# --- WORKLOADS ---
+RUN dnf clean all && dnf update -y && dnf install -y podman tuned vim-enhanced
+
+RUN systemctl enable podman.socket sshd.service
+
+# --- CLEANUP ---
+RUN dnf clean all && rm /var/{cache,lib}/dnf /var/lib/rhsm /var/cache/ldconfig -rf
+RUN bootc container lint
