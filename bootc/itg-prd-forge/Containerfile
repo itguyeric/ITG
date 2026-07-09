@@ -8,7 +8,12 @@ EOF
 
 COPY systemd/ /usr/lib/systemd/system/
 COPY quadlet/ /usr/share/containers/systemd/
-RUN systemctl enable var-lib-forge.mount
+RUN systemctl enable forge-data-init.service var-lib-forge.mount
+
+COPY <<'EOF' /usr/lib/tmpfiles.d/forge-data-dirs.conf
+d /var/lib/forge/pgdata   0700 999  999  -
+d /var/lib/forge/forgejo  0700 1001 1001 -
+EOF
 
 # --- CLEANUP --- #
 
