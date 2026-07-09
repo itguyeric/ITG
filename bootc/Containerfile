@@ -1,5 +1,5 @@
 FROM quay.io/fedora/fedora-bootc:latest
-Maintainer eric@itguyeric.com
+LABEL maintainer="eric@itguyeric.com"
 
 # --- USERS ---
 RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash ansible && \
@@ -9,18 +9,16 @@ RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel-nopasswd && \
     chmod 440 /etc/sudoers.d/wheel-nopasswd
 
-RUN mkdir -p /home/ansible/.ssh /home/itguyeric/.ssh
-
-COPY --chown=ansible:ansible ansible/roles/common/files/id_rsa_ans.pub /home/ansible/.ssh/authorized_keys
-COPY --chown=itguyeric:itguyeric ansible/roles/common/files/id_rsa_itg.pub /home/itguyeric/.ssh/authorized_keys
-
-RUN chmod 700 /home/ansible/.ssh /home/itguyeric/.ssh && \
-    chmod 600 /home/ansible/.ssh/authorized_keys /home/itguyeric/.ssh/authorized_keys
+RUN mkdir -p /etc/ssh/authorized_keys
+COPY ansible/roles/common/files/id_rsa_ans.pub /etc/ssh/authorized_keys/ansible
+COPY ansible/roles/common/files/id_rsa_itg.pub /etc/ssh/authorized_keys/itguyeric
+RUN chmod 700 /etc/ssh/authorized_keys && chmod 600 /etc/ssh/authorized_keys/* && \
+    echo 'AuthorizedKeysFile /etc/ssh/authorized_keys/%u' >> /etc/ssh/sshd_config
 
 # --- WORKLOADS ---
-RUN dnf clean all && dnf update -y && dnf install -y podman tuned vim-enhanced
+RUN dnf clean all && dnf update -y && dnf install -y podman qemu-guest-agent tuned vim-enhanced
 
-RUN systemctl enable podman.socket sshd.service
+RUN systemctl enable podman.socket qemu-guest-agent sshd
 
 # --- CLEANUP ---
 RUN dnf clean all && rm /var/{cache,lib}/dnf /var/lib/rhsm /var/cache/ldconfig -rf
