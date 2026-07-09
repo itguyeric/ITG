@@ -1,0 +1,12 @@
+FROM 10.10.10.162:5000/fedora-server:latest
+
+COPY <<'EOF' /usr/lib/bootc/kargs.d/20-hostname.toml
+kargs = ["systemd.hostname=itg-prd-plex"]
+EOF
+
+# --- WORKLOAD --- #
+
+COPY systemd/ /usr/lib/systemd/system/
+
+# --- CLEANUP --- #
+RUN bootc container lint
