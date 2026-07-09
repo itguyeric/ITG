@@ -1,0 +1,19 @@
+[Unit]
+Decription=Forgejo PostreSQL
+Requires=var-lib-forge.mount
+After=var-lib-forge.mount
+
+[Container]
+ContainerName=postgres
+Image=docker.io/library/postgres:17.10
+Network=forge.network
+Volume=/var/lib/forge/pgdata:/var/lib/postresql/data:Z
+Environment=POSTGRES_DB=forgejo
+Environment=POSTGRES_USER=forgejo
+Secret=forgejo-db-password,type=env,target=POSTGRES_PASSWORD
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

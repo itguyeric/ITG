@@ -1,0 +1,10 @@
+[Unit]
+Description=Forge data disk
+Before=local-fs.target
+
+[Mount]
+What=/dev/disk/by-lable/dataForge
+Where=/var/lib/forge
+
+[Install]
+WantedBy=local-fs.targetWai
