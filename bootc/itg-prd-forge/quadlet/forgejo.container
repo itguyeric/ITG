@@ -15,6 +15,9 @@ Environment=FORGEJO__database__HOST=postgres:5432
 Environment=FORGEJO__database__NAME=forgejo
 Environment=FORGEJO__database__USER=forgejo
 Environment=FORGEJO__server__SSH_PORT=2222
+Environment=FORGEJO__server__ROOT_URL=https://forge.itguyeric.com/
+Environment=FORGEJO__server__DOMAIN=forge.itguyeric.com
+Environment=FORGEJO__server__SSH_DOMAIN=forge.itguyeric.com
 Environment=USER_UID=1001
 Environment=USER_GID=1001
 Secret=forgejo-db-password,type=env,target=FORGEJO__database__PASSWD
