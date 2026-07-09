@@ -10,4 +10,4 @@ COPY quadlet/ /usr/share/containers/systemd/
 COPY systemd/ /usr/lib/systemd/system/
 
 # --- CLEANUP --- #
-RUN bootc container lint
+

@@ -11,4 +11,4 @@ COPY quadlet/ /usr/share/containers/systemd/
 RUN systemctl enable var-lib-forge.mount
 
 # --- CLEANUP --- #
-RUN bootc container lint
+

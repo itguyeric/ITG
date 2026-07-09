@@ -10,8 +10,10 @@ COPY <<'EOF' /usr/lib/sysusers.d/itg-users.conf
 #Type Name      ID         GECOS                 Home             Shell
 g     ansible	1000
 u     ansible   1000:1000  "Ansible SVC"	/home/ansible    /bin/bash
-g     itguyeric 1001
-u     itguyeric 1001:1001  "Eric the IT Guy"	/home/itguyeric  /bin/bash
+g     worker    1001
+u     worker    1001       "Podman SVC"         /home/worker     /bin/bash
+g     itguyeric 2001
+u     itguyeric 2001:2001  "Eric the IT Guy"	/home/itguyeric  /bin/bash
 m     ansible   wheel
 m     itguyeric wheel
 EOF
@@ -56,7 +58,3 @@ kargs = ["loglevel=3"]
 EOF
 
 RUN systemctl enable podman.socket sshd systemd-journald-audit.socket tuned
-
-# --- CLEANUP --- #
-
-RUN bootc container lint

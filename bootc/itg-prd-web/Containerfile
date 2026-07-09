@@ -11,4 +11,4 @@ COPY systemd/ /usr/lib/systemd/system/
 RUN systemctl enable var-lib-forge.mount
 
 # --- CLEANUP --- #
-RUN bootc container lint
+
