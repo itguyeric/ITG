@@ -12,8 +12,6 @@ g     ansible	1000
 u     ansible   1000:1000  "Ansible SVC"	/home/ansible    /bin/bash
 g     itguyeric 1001
 u     itguyeric 1001:1001  "Eric the IT Guy"	/home/itguyeric  /bin/bash
-g     worker    2000
-u     worker    2000:2000  "Container SVC"	/home/worker     /bin/bash
 m     ansible   wheel
 m     itguyeric wheel
 EOF
