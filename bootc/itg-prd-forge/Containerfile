@@ -1,0 +1,4 @@
+FROM 10.10.10.162:5000/fedora-server:latest
+
+COPY quadlet/ /usr/share/containers/systemd/
+RUN bootc container lint

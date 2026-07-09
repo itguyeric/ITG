@@ -3,9 +3,15 @@ LABEL maintainer="eric@itguyeric.com"
 
 # --- USERS --- #
 
-RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash ansible && \
-    groupadd -g 1001 itguyeric && useradd -u 1001 -g 1001 -G wheel -m -s /bin/bash itguyeric && \
-    groupadd -g 2000 worker && useradd -u 2000 -g 2000 -m -s /bin/bash worker
+COPY <<'EOF' /usr/lib/sysusers.d/itg-users.conf
+#Type Name      ID         GECOS                 Home             Shell
+u     ansible   1000:1000  "Ansible SVC"	/home/ansible    /bin/bash
+u     itguyeric 1001:1001  "Eric the IT Guy"	/home/itguyeric  /bin/bash
+u     worker    2000:2000  "Container SVC"	/home/worker     /bin/bash
+m     ansible   wheel
+m     itguyeric wheel
+EOF
+RUN systemd-sysusers
 
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel-nopasswd && \
     chmod 440 /etc/sudoers.d/wheel-nopasswd
@@ -15,10 +21,11 @@ RUN printf 'PasswordAuthentication no\nPermitRootLogin no\n' \
 
 # --- PACKAGES --- #
 
-RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storage cockpit-system podman qemu-guest-agent tuned vim-enhanced && \
+RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storaged cockpit-system podman qemu-guest-agent tuned vim-enhanced && \
     dnf remove -y kdump-utils kexec-tools && \
-    dnf clean all
-RUN systemctl enable cockpit.socket podman.socket sshd
+    dnf clean all && \
+    rm -rf /var/cache/* /var/lib/dnf /var/log/* /run/dnf /run/tuned
+RUN systemctl enable podman.socket sshd
 
 # --- SSH KEYS (bootc-idiomatic) --- #
 
@@ -36,7 +43,4 @@ EOF
 
 # --- CLEANUP --- #
 
-RUN echo 'itg-dev-bootc' > /etc/hostname
-
-RUN rm /var/{cache,lib}/dnf /var/lib/rhsm /var/cache/ldconfig -rf
 RUN bootc container lint
