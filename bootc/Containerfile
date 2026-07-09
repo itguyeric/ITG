@@ -8,8 +8,11 @@ RUN --mount=type=secret,id=rootpw \
 
 COPY <<'EOF' /usr/lib/sysusers.d/itg-users.conf
 #Type Name      ID         GECOS                 Home             Shell
+g     ansible	1000
 u     ansible   1000:1000  "Ansible SVC"	/home/ansible    /bin/bash
+g     itguyeric 1001
 u     itguyeric 1001:1001  "Eric the IT Guy"	/home/itguyeric  /bin/bash
+g     worker    2000
 u     worker    2000:2000  "Container SVC"	/home/worker     /bin/bash
 m     ansible   wheel
 m     itguyeric wheel
@@ -42,7 +45,6 @@ RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storaged cockpi
     dnf remove -y iscsi-initiator-utils kdump-utils kexec-tools && \
     dnf clean all && \
     rm -rf /var/cache/* /var/lib/dnf /var/log/* /run/dnf /run/tuned
-RUN systemctl enable podman.socket sshd tuned
 
 COPY <<'EOF' /usr/lib/tmpfiles.d/tuned.conf
 d /var/lib/tuned 0755 root root - -
@@ -50,6 +52,12 @@ EOF
 
 RUN echo 'virtual-guest' > /etc/tuned/active_profile && \
     echo 'manual' > /etc/tuned/profile_mode
+
+COPY <<'EOF' /usr/lib/bootc/kargs.d/10-console.toml
+kargs = ["loglevel=3"]
+EOF
+
+RUN systemctl enable podman.socket sshd systemd-journald-audit.socket tuned
 
 # --- CLEANUP --- #
 
