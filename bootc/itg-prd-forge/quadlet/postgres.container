@@ -1,5 +1,5 @@
 [Unit]
-Decription=Forgejo PostreSQL
+Description=Forgejo PostgreSQL
 Requires=var-lib-forge.mount
 After=var-lib-forge.mount
 
@@ -7,7 +7,7 @@ After=var-lib-forge.mount
 ContainerName=postgres
 Image=docker.io/library/postgres:17.10
 Network=forge.network
-Volume=/var/lib/forge/pgdata:/var/lib/postresql/data:Z
+Volume=/var/lib/forge/pgdata:/var/lib/postgresql/data:Z
 Environment=POSTGRES_DB=forgejo
 Environment=POSTGRES_USER=forgejo
 Secret=forgejo-db-password,type=env,target=POSTGRES_PASSWORD

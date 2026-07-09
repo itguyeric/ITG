@@ -3,8 +3,9 @@ Description=Forge data disk
 Before=local-fs.target
 
 [Mount]
-What=/dev/disk/by-lable/dataForge
+What=/dev/disk/by-label/dataForge
 Where=/var/lib/forge
+Type=xfs
 
 [Install]
-WantedBy=local-fs.targetWai
+WantedBy=local-fs.target
