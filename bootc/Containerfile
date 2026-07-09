@@ -22,9 +22,9 @@ RUN printf 'PasswordAuthentication no\nPermitRootLogin no\n' \
 # --- PACKAGES --- #
 
 RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storaged cockpit-system podman qemu-guest-agent tuned vim-enhanced && \
-    dnf remove -y kdump-utils kexec-tools && \
+    dnf remove -y iscsi-initiator-utils kdump-utils kexec-tools && \
     dnf clean all && \
-    rm -rf /var/cache/* /var/lib/dnf /var/log/* /run/dnf /run/tuned
+    rm -rf /var/cache/* /var/lib/dnf /var/log/* /run/dnf /run/tune
 RUN systemctl enable podman.socket sshd
 
 # --- SSH KEYS (bootc-idiomatic) --- #
