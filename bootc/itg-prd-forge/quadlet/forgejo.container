@@ -1,0 +1,26 @@
+[Unit]
+Description=Forgejo
+Requires=var-lib-forge.mount postgres.service
+After=var-lib-forge.mount postgres.service
+
+[Container]
+ContainerName=forgejo
+Image=codeberg.org/forgejo/forgejo:15.0.3
+Network=forge.network
+Volume=/var/lib/forge/forgejo:/data:Z
+PublishPort=3000:3000
+PublishPort=2222:22
+Environment=FORGEJO__database__DB_TYPE=postgres
+Environment=FORGEJO__database__HOST=postgres:5432
+Environment=FORGEJO__database__NAME=forgejo
+Environment=FORGEJO__database__USER=forgejo
+Environment=FORGEJO__server__SSH_PORT=2222
+Environment=USER_UID=1001
+Environment=USER_GID=1001
+Secret=forgejo-db-password,type=env,target=FORGEJO__database__PASSWD
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

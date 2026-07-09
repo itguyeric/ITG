@@ -6,10 +6,9 @@ EOF
 
 # --- WORKLOAD --- #
 
-COPY quadlet/ /usr/share/containers/systemd/
 COPY systemd/ /usr/lib/systemd/system/
+COPY quadlet/ /usr/share/containers/systemd/
 RUN systemctl enable var-lib-forge.mount
-
 
 # --- CLEANUP --- #
 RUN bootc container lint
