@@ -10,8 +10,9 @@ RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel-nopasswd && \
     chmod 440 /etc/sudoers.d/wheel-nopasswd
 
 # --- PACKAGES --- #
-RUN dnf install -y podman qemu-guest-agent tuned vim-enhanced && dnf clean all
-RUN systemctl enable podman.socket qemu-guest-agent sshd
+RUN dnf install -y podman qemu-guest-agent tuned vim-enhanced && \
+    dnf remove -y kdump-utils kexec-tools && \
+    dnf clean all
 
 # --- SSH KEYS (bootc-idiomatic) --- #
 COPY ansible/roles/common/files/id_rsa_ans.pub /usr/share/ssh-keys/ansible.pub
