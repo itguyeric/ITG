@@ -3,6 +3,9 @@ LABEL maintainer="eric@itguyeric.com"
 
 # --- USERS --- #
 
+RUN --mount=type=secret,id=rootpw \
+    echo "root:$(cat /run/secrets/rootpw)" | chpasswd -e
+
 COPY <<'EOF' /usr/lib/sysusers.d/itg-users.conf
 #Type Name      ID         GECOS                 Home             Shell
 u     ansible   1000:1000  "Ansible SVC"	/home/ansible    /bin/bash
