@@ -1,7 +1,7 @@
 FROM quay.io/fedora/fedora-bootc:latest
 LABEL maintainer="eric@itguyeric.com"
 
-# --- USERS ---
+# --- USERS --- #
 RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash ansible && \
     groupadd -g 1001 itguyeric && useradd -u 1001 -g 1001 -G wheel -m -s /bin/bash itguyeric && \
     groupadd -g 2000 worker && useradd -u 2000 -g 2000 -m -s /bin/bash worker
@@ -9,16 +9,22 @@ RUN groupadd -g 1000 ansible && useradd -u 1000 -g 1000 -G wheel -m -s /bin/bash
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel-nopasswd && \
     chmod 440 /etc/sudoers.d/wheel-nopasswd
 
-RUN mkdir -p /etc/ssh/authorized_keys
-COPY ansible/roles/common/files/id_rsa_ans.pub /etc/ssh/authorized_keys/ansible
-COPY ansible/roles/common/files/id_rsa_itg.pub /etc/ssh/authorized_keys/itguyeric
-RUN chmod 700 /etc/ssh/authorized_keys && chmod 600 /etc/ssh/authorized_keys/* && \
-    echo 'AuthorizedKeysFile /etc/ssh/authorized_keys/%u' >> /etc/ssh/sshd_config
-
-# --- WORKLOADS ---
-RUN dnf clean all && dnf update -y && dnf install -y podman qemu-guest-agent tuned vim-enhanced
-
+# --- PACKAGES --- #
+RUN dnf install -y podman qemu-guest-agent tuned vim-enhanced && dnf clean all
 RUN systemctl enable podman.socket qemu-guest-agent sshd
+
+# --- SSH KEYS (bootc-idiomatic) --- #
+COPY ansible/roles/common/files/id_rsa_ans.pub /usr/share/ssh-keys/ansible.pub
+COPY ansible/roles/common/files/id_rsa_itg.pub /usr/share/ssh-keys/itguyeric.pub
+
+COPY <<'EOF' /usr/lib/tmpfiles.d/ssh-authorized-keys.conf
+d /home/ansible                          0700 ansible   ansible   -
+d /home/ansible/.ssh                     0700 ansible   ansible   -
+C /home/ansible/.ssh/authorized_keys     0600 ansible   ansible   - /usr/share/ssh-keys/ansible.pub
+d /home/itguyeric                        0700 itguyeric itguyeric -
+d /home/itguyeric/.ssh                   0700 itguyeric itguyeric -
+C /home/itguyeric/.ssh/authorized_keys   0600 itguyeric itguyeric - /usr/share/ssh-keys/itguyeric.pub
+EOF
 
 # --- CLEANUP ---
 RUN dnf clean all && rm /var/{cache,lib}/dnf /var/lib/rhsm /var/cache/ldconfig -rf
