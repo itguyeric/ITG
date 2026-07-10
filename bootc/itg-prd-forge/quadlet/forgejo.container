@@ -17,9 +17,11 @@ Environment=FORGEJO__database__USER=forgejo
 Environment=FORGEJO__server__SSH_PORT=2222
 Environment=FORGEJO__server__ROOT_URL=https://forge.itguyeric.com/
 Environment=FORGEJO__server__DOMAIN=forge.itguyeric.com
-Environment=FORGEJO__server__SSH_DOMAIN=forge.itguyeric.com
+Environment=FORGEJO__server__SSH_DOMAIN=git.itguyeric.com
 Environment=USER_UID=1001
 Environment=USER_GID=1001
+Environment=FORGEJO__security__INSTALL_LOCK=true
+Environment=FORGEJO__service__DISABLE_REGISTRATION=true
 Secret=forgejo-db-password,type=env,target=FORGEJO__database__PASSWD
 
 [Service]

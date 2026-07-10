@@ -1,7 +1,11 @@
 FROM 10.10.10.162:5000/fedora-server:latest
 
-COPY <<'EOF' /usr/lib/bootc/kargs.d/20-hostname.toml
-kargs = ["systemd.hostname=itg-prd-forge"]
+COPY <<'EOF' /usr/lib/NetworkManager/conf.d/20-keep-hostname.conf
+[main]
+hostname-mode=none
+
+[connection]
+ipv4.dhcp-hostname=itg-prd-forge
 EOF
 
 # --- WORKLOAD --- #

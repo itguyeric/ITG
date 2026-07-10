@@ -41,7 +41,7 @@ EOF
 
 # --- SYSTEM --- #
 
-RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storaged cockpit-system podman qemu-guest-agent tuned vim-enhanced && \
+RUN dnf install -y cockpit-networkmanager cockpit-podman cockpit-storaged cockpit-system nfs-utils podman qemu-guest-agent tuned vim-enhanced && \
     dnf remove -y iscsi-initiator-utils kdump-utils kexec-tools && \
     dnf clean all && \
     rm -rf /var/cache/* /var/lib/dnf /var/log/* /run/dnf /run/tuned
@@ -50,11 +50,35 @@ COPY <<'EOF' /usr/lib/tmpfiles.d/tuned.conf
 d /var/lib/tuned 0755 root root - -
 EOF
 
+COPY <<'EOF' /usr/lib/systemd/system/var-mnt-depot.mount
+[Unit]
+Description=NFS depot from itg
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What=10.10.10.2:/mnt/fast-vmstore/depot
+Where=/var/mnt/depot
+Type=nfs
+Options=_netdev,noatime
+
+[Install]
+WantedBy=remote-fs.target
+EOF
+
+# Set performance profile
 RUN echo 'virtual-guest' > /etc/tuned/active_profile && \
     echo 'manual' > /etc/tuned/profile_mode
 
+# Set authoritatize hostname
+COPY <<'EOF' /usr/lib/NetworkManager/conf.d/20-keep-hostname.conf
+[main]
+hostname-mode=none
+EOF
+
+# No debug logging in console
 COPY <<'EOF' /usr/lib/bootc/kargs.d/10-console.toml
 kargs = ["loglevel=3"]
 EOF
 
-RUN systemctl enable podman.socket sshd systemd-journald-audit.socket tuned
+RUN systemctl enable podman.socket sshd systemd-journald-audit.socket tuned var-mnt-depot.mount
